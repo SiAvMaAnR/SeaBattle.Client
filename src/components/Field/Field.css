@@ -1,0 +1,35 @@
+table {
+    background: rgb(216, 216, 216);
+    border-radius: 5px;
+}
+
+td,
+th {
+  width: 50px;
+  height: 50px;
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+tr {
+  display: flex;
+  justify-content: center;
+}
+
+.header-left {
+  width: 5px;
+}
+
+
+.header-top,
+.header-left{
+    width: 50px;
+    font-size: 30px;
+    line-height: 50px;
+}
+
+.header-top{
+    font-weight: normal;
+}
