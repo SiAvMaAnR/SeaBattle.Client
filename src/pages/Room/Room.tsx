@@ -1,16 +1,30 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SocketContext } from "../../App";
+import EnemyField from "../../components/EnemyField/EnemyField";
+import Game from "../../components/Game/Game";
+import Init from "../../components/Init/Init";
+import MyField from "../../components/MyField/MyField";
 import "./Room.css";
 
 
 const Room = () => {
     const socket = useContext(SocketContext);
-    const { name } = useParams();
-    const [message, setMessage] = useState<string>("");
+    // const [message, setMessage] = useState<string>("");
+    const [isStart, setIsStart] = useState(false);
+    const [isInit, setIsInit] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
+
+        socket.on("room:get:current", (roomId: string) => {
+            if (!roomId) {
+                navigate('home');
+                return;
+            }
+
+            socket.emit("game:start");
+        })
 
         socket.on("game:start", ({ isStart, isFirstMove }: {
             isStart: boolean,
@@ -18,29 +32,29 @@ const Room = () => {
         }) => {
 
             if (!isStart) {
-                setMessage("The game has not started, maybe not enough players");
                 return;
             }
+            setIsStart(true);
             socket.emit("game:create", isFirstMove);
-            navigate("/init");
         });
+
+        socket.emit("room:get:current");
 
         return () => {
             socket.off("game:start");
+            socket.emit("room:leave");
         }
-    }, []);
+    }, [socket, navigate]);
 
 
-
-    function clickHandler() {
-        socket.emit("game:start");
-    }
 
     return (
         <div>
-            {name} : {message}
-
-            <button onClick={() => clickHandler()}>Start</button>
+            {(isStart)
+                ? (isInit)
+                    ? <Game />
+                    : <Init setIsInit={setIsInit} />
+                : <div>Wait player</div>}
         </div>
     );
 };

@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react'
 import CellEnum from './enums/CellEnum'
 import CSS from 'csstype';
 import "./Cell.css";
-import CoordinateType from '../../common/types/coordinate';
+import Coordinate from '../../common/types/coordinate';
 
 const Cell = ({ onclick, coord, children }: {
     children: CellEnum,
     onclick: Function,
-    coord: CoordinateType
+    coord: Coordinate
 }) => {
 
     const [cell, setCell] = useState<CSS.Properties>({});
-    const [coordinate, setCoordinate] = useState<CoordinateType>();
+    const [coordinate, setCoordinate] = useState<Coordinate>();
 
 
     useEffect(() => {
@@ -25,13 +25,11 @@ const Cell = ({ onclick, coord, children }: {
             case CellEnum.Killed: setCell({ background: "red" }); break;
             default: setCell({ background: "black" }); break;
         }
-    }, []);
-
-
+    }, [children, coord]);
 
     return (
         <div onClick={(e) => onclick(e, coordinate)} className='cell' style={cell} />
     )
 }
 
-export default Cell
+export default Cell;

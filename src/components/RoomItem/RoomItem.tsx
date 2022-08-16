@@ -2,22 +2,19 @@ import React, { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from '../../App';
 
-const RoomItem = ({id, name, count }: {
+const RoomItem = ({ id, name, count }: {
     id: number,
     name: string,
     count: number
 }) => {
-    const navigate = useNavigate();
-
     const socket = useContext(SocketContext);
 
     useEffect(() => {
-
+        
     }, []);
 
     function joinHandler() {
         socket.emit("room:join", name);
-        navigate(`/room/${name}`);
     }
 
     return (

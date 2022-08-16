@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import CoordinateType from '../../common/types/coordinate';
 import Field from '../Field/Field';
+import { SocketContext } from '../../App';
 import "./MyField.css";
 
 const MyField = () => {
 
     const [field, setField] = useState<number[][]>([]);
+    const socket = useContext(SocketContext);
 
 
     useEffect(() => {
-        const array: number[][] = Array(10).fill(0).map(row => new Array(10).fill(0));
-        setField(array);
+        socket.on("game:field:my", (field: number[][]) => {
+            setField(field);
+        });
 
-        console.log(array)
-    }, []);
+        socket.emit("game:field:my");
+
+        return () => {
+            socket.off("game:field:my");
+        }
+
+    }, [socket]);
 
 
 

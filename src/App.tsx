@@ -1,11 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import Home from "./pages/Home/Home";
-import Game from "./pages/Game/Game";
+import Game from "./components/Game/Game";
 import Room from "./pages/Room/Room";
-import InitField from "./pages/InitField/InitField";
 
 const socket = io("http://localhost:3000");
 const SocketContext = createContext(socket);
@@ -13,6 +12,7 @@ const SocketContext = createContext(socket);
 function App() {
 
   const [isConnected, setIsConnected] = useState(socket.connected);
+
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -37,9 +37,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/*" element={<Home />} />
-          <Route path="/game" element={<Game />} />
-          <Route path="/room/:name" element={<Room />} />
-          <Route path="/init" element={<InitField />} />
+          <Route path="/room" element={<Room />} />
         </Routes>
       </BrowserRouter>
     </SocketContext.Provider>

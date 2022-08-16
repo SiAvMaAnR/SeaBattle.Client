@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Cell from '../Cell/Cell';
 import "./Field.css";
 
@@ -9,7 +9,6 @@ const Field = ({ field, onclick }: {
 
     const topHeader = ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const leftHeader = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
-
 
     return (
         <div className='table-container'>
@@ -24,18 +23,20 @@ const Field = ({ field, onclick }: {
                 <tbody>
                     {field.map((items, y) => {
                         return (
-                            <tr className='cell-row' key={y}>
-                                <td className='header-left'>{leftHeader[y]}</td>
-                                {items.map((item, x) => <td key={x}>
-                                    <Cell onclick={onclick} coord={{ y: y, x: x }}>{item}</Cell>
-                                </td>)}
+                            <tr key={`tr${y}`} className='cell-row'>
+                                <td key={`td${y}`} className='header-left'>{leftHeader[y]}</td>
+                                {items.map((item, x) =>
+                                    <td key={`td${y}${x}`} >
+                                        <Cell key={`cell${y}${x}`} onclick={onclick} coord={{ y: y, x: x }}>{item}</Cell>
+                                    </td>)
+                                }
                             </tr>
                         );
                     })}
                 </tbody>
             </table>
-        </div>
+        </div >
     )
 }
 
-export default Field
+export default Field;

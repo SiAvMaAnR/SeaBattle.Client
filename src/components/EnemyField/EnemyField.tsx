@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import CoordinateType from '../../common/types/coordinate';
+import React, { useContext, useEffect, useState } from 'react'
+import { SocketContext } from '../../App';
+import Coordinate from '../../common/types/coordinate';
 import Field from '../Field/Field';
 import "./EnemyField.css";
 
@@ -7,18 +8,26 @@ import "./EnemyField.css";
 const EnemyField = () => {
 
   const [field, setField] = useState<number[][]>([]);
+  const socket = useContext(SocketContext);
 
 
   useEffect(() => {
-    const array: number[][] = Array(10).fill(0).map(row => new Array(10).fill(0));
-    setField(array);
-
-    console.log(array)
-  }, []);
+    socket.on("game:field:enemy", (field: number[][]) => {
+      setField(field);
+    });
 
 
-  function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType) {
+    socket.emit("game:field:enemy");
+
+    return () => {
+      socket.off("game:field:enemy");
+    }
+  }, [socket]);
+
+
+  function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: Coordinate) {
     console.log(coordinate);
+    socket.emit("game:shoot:init", coordinate);
   }
 
 
