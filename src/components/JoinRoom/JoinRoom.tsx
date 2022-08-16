@@ -18,7 +18,7 @@ const JoinRoom = () => {
     return (
         <div className='join-room'>
             <input type="text" onChange={(e) => setName(e.target.value)} value={name} />
-            <button onClick={() => joinHandler()}>join</button>
+            <button onClick={() => joinHandler()}>Join</button>
         </div>
     )
 }

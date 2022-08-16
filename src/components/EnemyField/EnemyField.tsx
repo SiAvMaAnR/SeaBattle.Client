@@ -5,10 +5,12 @@ import Field from '../Field/Field';
 import "./EnemyField.css";
 
 
-const EnemyField = () => {
-
-  const [field, setField] = useState<number[][]>([]);
+const EnemyField = ({ isEnd }: {
+  isEnd: boolean
+}) => {
   const socket = useContext(SocketContext);
+  const [field, setField] = useState<number[][]>([]);
+  const [name, setName] = useState<string>("Враг");
 
 
   useEffect(() => {
@@ -25,16 +27,19 @@ const EnemyField = () => {
   }, [socket]);
 
 
+
+
   function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: Coordinate) {
     console.log(coordinate);
-    socket.emit("game:shoot:init", coordinate);
+    if (!isEnd) {
+      socket.emit("game:shoot:init", coordinate);
+    }
   }
 
 
   return (
     <div className='container'>
-      <div className='title'>EnemyField</div>
-      <Field field={field} onclick={clickCellHandler} />
+      <Field name={name} field={field} onclick={clickCellHandler} />
     </div>
 
   )

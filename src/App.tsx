@@ -1,10 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
-import "./App.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import Home from "./pages/Home/Home";
-import Game from "./components/Game/Game";
 import Room from "./pages/Room/Room";
+import "./App.css";
+
 
 const socket = io("http://localhost:3000");
 const SocketContext = createContext(socket);
@@ -31,16 +31,18 @@ function App() {
 
 
   return (
+    <div className="app">
+      <SocketContext.Provider value={socket}>
+        <div>{isConnected ? "Connected" : "Not connected"}</div>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/*" element={<Home />} />
+            <Route path="/room" element={<Room />} />
+          </Routes>
+        </BrowserRouter>
+      </SocketContext.Provider>
+    </div>
 
-    <SocketContext.Provider value={socket}>
-      <div>{isConnected ? "Connected" : "Not connected"}</div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<Home />} />
-          <Route path="/room" element={<Room />} />
-        </Routes>
-      </BrowserRouter>
-    </SocketContext.Provider>
   );
 }
 

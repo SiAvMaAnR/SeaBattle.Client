@@ -12,18 +12,18 @@ const Home = () => {
 
     useEffect(() => {
         socket.on("room:join", (isSuccess: boolean, message: string) => {
-            if(isSuccess){
+            if (isSuccess) {
                 navigate("room");
             }
         })
 
-        return ()=>{
+        return () => {
             socket.off("room:join");
         }
-    }, []);
+    }, [socket, navigate]);
 
     return (
-        <div className="main">
+        <div className="home">
             <RoomList />
             <JoinRoom />
         </div>

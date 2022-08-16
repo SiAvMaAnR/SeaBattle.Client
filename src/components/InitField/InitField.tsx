@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Socket } from 'socket.io-client';
 import Coordinate from '../../common/types/coordinate';
 import Field from '../Field/Field';
 import "./InitField.css";
 import { SocketContext } from '../../App';
 import Cell from '../Cell/enums/CellEnum';
+import Button from '../UI/Button/Button';
 
-const InitField = () => {
+const InitField = ({ setIsInit }: {
+    setIsInit: Function
+}) => {
     const socket = useContext(SocketContext);
 
     const [field, setField] = useState<number[][]>([]);
+    const [name, setName] = useState("Init");
 
 
     useEffect(() => {
@@ -19,17 +22,17 @@ const InitField = () => {
 
         socket.on("game:field:init", (field: number[][]) => {
             console.log(field);
-
             setField(field);
+            setIsInit(true);
         });
 
         socket.emit("game:field:my");
 
         return () => {
-            socket.off("game:field:init");
             socket.off("game:field:my");
+            socket.off("game:field:init");
         }
-    }, [socket]);
+    }, [socket, setIsInit]);
 
 
 
@@ -45,7 +48,6 @@ const InitField = () => {
                 return cell;
             })
         }))
-
     }
 
     function clickSaveHandler() {
@@ -53,11 +55,9 @@ const InitField = () => {
     }
 
     return (
-        <div className='container'>
-            <div className='title'>InitField</div>
-            <Field field={field} onclick={clickCellHandler} />
-
-            <button onClick={clickSaveHandler}>Save</button>
+        <div className='init-field'>
+            <Field name={name} field={field} onclick={clickCellHandler} />
+            <Button onClick={() => clickSaveHandler()}>Ready</Button>
         </div>
     );
 }

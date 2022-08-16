@@ -1,16 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SocketContext } from "../../App";
-import EnemyField from "../../components/EnemyField/EnemyField";
 import Game from "../../components/Game/Game";
 import Init from "../../components/Init/Init";
-import MyField from "../../components/MyField/MyField";
 import "./Room.css";
 
 
 const Room = () => {
     const socket = useContext(SocketContext);
-    // const [message, setMessage] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
     const [isStart, setIsStart] = useState(false);
     const [isInit, setIsInit] = useState(false);
     const navigate = useNavigate();
@@ -49,7 +47,7 @@ const Room = () => {
 
 
     return (
-        <div>
+        <div className="room">
             {(isStart)
                 ? (isInit)
                     ? <Game />

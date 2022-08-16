@@ -2,15 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import EnemyField from '../EnemyField/EnemyField';
 import MyField from '../MyField/MyField';
 import { SocketContext } from '../../App';
-
-import "./Game.css"
 import Coordinate from "../../common/types/coordinate";
+import "./Game.css"
 
 const Game = () => {
 
     const socket = useContext(SocketContext);
     const [isWin, setIsWin] = useState<boolean>(false);
     const [isEnd, setIsEnd] = useState<boolean>(false);
+    const [isMyMove, setIsMyMove] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>("Message");
+    const [winMessage, setWinMessage] = useState<string>("Бой!");
 
     useEffect(() => {
         socket.on("game:shoot:init", (coordinate: Coordinate) => {
@@ -21,6 +23,8 @@ const Game = () => {
         socket.on("game:shoot:process", (isHit: boolean, coordinate: Coordinate) => {
             console.log(isHit, coordinate);
             socket.emit("game:shoot:result", isHit, coordinate);
+
+            setMessage((isHit) ? "Попадание!" : "Промазал!");
         });
 
         socket.on("game:shoot:result", ({ myField, enemyField }: {
@@ -34,6 +38,13 @@ const Game = () => {
         socket.on("game:result", (isWin: boolean) => {
             setIsEnd(true);
             setIsWin(isWin);
+
+            setWinMessage((isWin) ? "Победа!" : "Поражение!");
+            setMessage((isWin) ? "Молодец!" : "Повезет в другой раз");
+        });
+
+        socket.on("game:move", (isMove: boolean) => {
+            setIsMyMove(isMove);
         });
 
         return () => {
@@ -41,19 +52,26 @@ const Game = () => {
             socket.off("game:shoot:process");
             socket.off("game:shoot:result");
             socket.off("game:result");
+            socket.off("game:move");
         }
-    })
+    }, [socket]);
+
 
 
     return (
         <div>
-            <div className="result">{(isEnd) && (isWin) ? "YOU WIN" : "YOU ЛОСЬ"}</div>
-            <div className='main'>
+            <div className="header">
+                <div className="result">{(isEnd) && winMessage}</div>
+                <div className="message">{message}</div>
+                <div className="move">{isMyMove ? "Твой ход" : "Ходит противник"}</div>
+            </div>
+
+            <div className='fields'>
                 <div className='my-field'>
                     <MyField />
                 </div>
                 <div className='enemy-field'>
-                    <EnemyField />
+                    <EnemyField isEnd={isEnd} />
                 </div>
             </div>
         </div>
