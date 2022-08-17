@@ -11,8 +11,8 @@ const Game = () => {
     const [isWin, setIsWin] = useState<boolean>(false);
     const [isEnd, setIsEnd] = useState<boolean>(false);
     const [isMyMove, setIsMyMove] = useState<boolean>(false);
-    const [message, setMessage] = useState<string>("Message");
-    const [winMessage, setWinMessage] = useState<string>("Бой!");
+    const [message, setMessage] = useState<string>("В бой!");
+    const [winMessage, setWinMessage] = useState<string>("Идет битва");
 
     useEffect(() => {
         socket.on("game:shoot:init", (coordinate: Coordinate) => {
@@ -39,8 +39,8 @@ const Game = () => {
             setIsEnd(true);
             setIsWin(isWin);
 
-            setWinMessage((isWin) ? "Победа!" : "Поражение!");
-            setMessage((isWin) ? "Молодец!" : "Повезет в другой раз");
+            setWinMessage((isWin) ? "Победа" : "Поражение");
+            setMessage((isWin) ? "Респект" : "Повезет в другой раз");
         });
 
         socket.on("game:move", (isMove: boolean) => {
@@ -61,7 +61,7 @@ const Game = () => {
     return (
         <div>
             <div className="header">
-                <div className="result">{(isEnd) && winMessage}</div>
+                <div className="result">{winMessage}</div>
                 <div className="message">{message}</div>
                 <div className="move">{isMyMove ? "Твой ход" : "Ходит противник"}</div>
             </div>

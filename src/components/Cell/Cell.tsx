@@ -20,8 +20,8 @@ const Cell = ({ onclick, coord, children }: {
 
         switch (children) {
             case CellEnum.Empty: setCell({ background: "white" }); break;
-            case CellEnum.Exists: setCell({ background: "blue" }); break;
-            case CellEnum.Missed: setCell({ background: "#8A2BE2" }); break;
+            case CellEnum.Exists: setCell({ background: "#00008B" }); break;
+            case CellEnum.Missed: setCell({ background: "#87CEFA" }); break;
             case CellEnum.Killed: setCell({ background: "red" }); break;
             default: setCell({ background: "black" }); break;
         }

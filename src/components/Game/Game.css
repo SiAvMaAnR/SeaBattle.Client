@@ -7,20 +7,28 @@
 .header {
   height: 10vh;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  margin: 0 80px;
   align-items: center;
   font-size: 28px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .header > .move {
+  flex: 0 0 300px;
+  overflow: hidden;
+  text-align: center;
+
 }
 
 .header > .result {
+  flex: 0 0 300px;
+  overflow: hidden;
+  text-align: center;
 }
 
 .header > .message {
-
+    font-size: 36px;
 }
 
 .fields {
