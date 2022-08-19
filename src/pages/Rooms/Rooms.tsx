@@ -3,19 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { SocketContext } from "../../App";
 import JoinRoom from "../../components/JoinRoom/JoinRoom";
 import RoomList from "../../components/RoomList/RoomList";
-import "./Home.css";
+import "./Rooms.css";
 
 
-const Home = () => {
+const Rooms = () => {
     const socket = useContext(SocketContext);
     const navigate = useNavigate();
 
     useEffect(() => {
         socket.on("room:join", (isSuccess: boolean, message: string) => {
             if (isSuccess) {
-                navigate("room");
+                navigate("game");
+            }
+        });
+
+        socket.on("room:leave", ({ isSuccess, message }: {
+            isSuccess: boolean,
+            message: string
+        }) => {
+            console.log(message);
+            if (isSuccess) {
+                navigate('rooms');
             }
         })
+
+        socket.emit("room:leave");
 
         return () => {
             socket.off("room:join");
@@ -23,11 +35,11 @@ const Home = () => {
     }, [socket, navigate]);
 
     return (
-        <div className="home">
+        <div className="rooms">
             <RoomList />
             <JoinRoom />
         </div>
     );
 };
 
-export default Home;
+export default Rooms;

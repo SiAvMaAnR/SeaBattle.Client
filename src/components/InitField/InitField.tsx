@@ -6,13 +6,14 @@ import { SocketContext } from '../../App';
 import Cell from '../Cell/enums/CellEnum';
 import Button from '../UI/Button/Button';
 
-const InitField = ({ setIsInit }: {
-    setIsInit: Function
+const InitField = ({ isReady, setIsReady }: {
+    isReady: boolean,
+    setIsReady: Function
 }) => {
     const socket = useContext(SocketContext);
 
     const [field, setField] = useState<number[][]>([]);
-    const [name, setName] = useState("Init");
+    const [name, setName] = useState<string>("Инициализация поля");
 
 
     useEffect(() => {
@@ -20,19 +21,12 @@ const InitField = ({ setIsInit }: {
             setField(field);
         });
 
-        socket.on("game:field:init", (field: number[][]) => {
-            console.log(field);
-            setField(field);
-            setIsInit(true);
-        });
-
         socket.emit("game:field:my");
 
         return () => {
             socket.off("game:field:my");
-            socket.off("game:field:init");
         }
-    }, [socket, setIsInit]);
+    }, [socket]);
 
 
 
@@ -52,12 +46,13 @@ const InitField = ({ setIsInit }: {
 
     function clickSaveHandler() {
         socket.emit("game:field:init", field);
+        socket.emit("game:ready", !isReady);
     }
 
     return (
         <div className='init-field'>
-            <Field name={name} field={field} onclick={clickCellHandler} />
-            <Button onClick={() => clickSaveHandler()}>Ready</Button>
+            <Field name={isReady ? "ready" : "not ready"} field={field} onclick={clickCellHandler} />
+            <Button onClick={() => clickSaveHandler()}>Готов</Button>
         </div>
     );
 }

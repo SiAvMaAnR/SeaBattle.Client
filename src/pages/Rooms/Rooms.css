@@ -1,0 +1,13 @@
+.rooms {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  
+}
+
+.rooms > * {
+  flex: 0 1 50vw;
+  padding: 10px 2px;
+}

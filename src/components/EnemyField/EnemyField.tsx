@@ -32,7 +32,7 @@ const EnemyField = ({ isEnd }: {
   function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: Coordinate) {
     console.log(coordinate);
     if (!isEnd) {
-      socket.emit("game:shoot:init", coordinate);
+      socket.emit("game:shoot", coordinate);
     }
   }
 

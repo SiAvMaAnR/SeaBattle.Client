@@ -1,0 +1,15 @@
+.room-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-list > .container {
+  flex: 0 0 91vh;
+  border-radius: 8px;
+  border: none;
+  height: 100%;
+  padding: 10px;
+  background: rgb(223, 223, 223);
+
+
+}

@@ -1,9 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
-import Home from "./pages/Home/Home";
-import Room from "./pages/Room/Room";
 import "./App.css";
+import Navbar from "./components/Navbar/Navbar";
+import Game from "./pages/Game/Game";
+import Rooms from "./pages/Rooms/Rooms";
 
 
 const socket = io("http://localhost:3000");
@@ -15,6 +16,7 @@ function App() {
 
 
   useEffect(() => {
+
     socket.on("connect", () => {
       setIsConnected(true);
     });
@@ -22,6 +24,7 @@ function App() {
     socket.on("disconnect", () => {
       setIsConnected(false);
     });
+
 
     return () => {
       socket.off("connect");
@@ -33,11 +36,11 @@ function App() {
   return (
     <div className="app">
       <SocketContext.Provider value={socket}>
-        <div>{isConnected ? "Connected" : "Not connected"}</div>
+        <Navbar isConnected={isConnected}></Navbar>
         <BrowserRouter>
           <Routes>
-            <Route path="/*" element={<Home />} />
-            <Route path="/room" element={<Room />} />
+            <Route path="/*" element={<Rooms />} />
+            <Route path="/game" element={<Game />} />
           </Routes>
         </BrowserRouter>
       </SocketContext.Provider>

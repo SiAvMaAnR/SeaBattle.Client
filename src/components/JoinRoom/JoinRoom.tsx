@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from '../../App';
+import "./JoinRoom.css";
 
 const JoinRoom = () => {
     const socket = useContext(SocketContext);
@@ -8,7 +9,7 @@ const JoinRoom = () => {
 
 
     useEffect(() => {
-        
+
     }, []);
 
     function joinHandler() {
@@ -17,8 +18,10 @@ const JoinRoom = () => {
 
     return (
         <div className='join-room'>
-            <input type="text" onChange={(e) => setName(e.target.value)} value={name} />
-            <button onClick={() => joinHandler()}>Join</button>
+            <div className='container'>
+                <input type="text" placeholder='Введите комнату' onChange={(e) => setName(e.target.value)} value={name} />
+                <button onClick={() => joinHandler()}>Присоединиться</button>
+            </div>
         </div>
     )
 }

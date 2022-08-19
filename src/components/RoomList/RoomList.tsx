@@ -1,12 +1,11 @@
 import React, { useEffect, useContext, useState, useMemo, useCallback } from 'react'
 import { SocketContext } from '../../App';
-import RoomType from '../../common/types/room';
 import RoomItem from '../RoomItem/RoomItem';
-import Room from '../RoomItem/RoomItem';
+import "./RoomList.css";
 
 
 const RoomList = () => {
-    const [activeRooms, setActiveRooms] = useState<RoomType[]>([]);
+    const [activeRooms, setActiveRooms] = useState<RoomRequest[]>([]);
 
     const socket = useContext(SocketContext);
 
@@ -16,12 +15,12 @@ const RoomList = () => {
 
     useEffect(() => {
 
-        socket.on("room:get:all", (rooms: RoomType[]) => {
+        socket.on("room:get:all", (rooms: RoomRequest[]) => {
             setActiveRooms(rooms);
         });
 
         callbackInterval();
-        const interval = setInterval(callbackInterval, 2000);
+        const interval = setInterval(callbackInterval, 1000);
 
 
         return () => {
@@ -34,11 +33,18 @@ const RoomList = () => {
 
 
     return (
-        <div>
-            {activeRooms.map(room => <RoomItem key={room.id} id={room.id} name={room.name} count={room.count} />)}
+        <div className='room-list'>
+            <div className='container'>
+                {activeRooms.map(room => <RoomItem key={room.id} id={room.index} name={room.id} count={room.count} />)}
+            </div>
         </div>
     )
 }
 
+type RoomRequest = {
+    index: number,
+    id: string,
+    count: number
+}
 
 export default RoomList;
