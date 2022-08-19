@@ -12,8 +12,10 @@ const Rooms = () => {
 
     useEffect(() => {
         socket.on("room:join", (isSuccess: boolean, message: string) => {
+            console.log(message);
+            
             if (isSuccess) {
-                navigate("game");
+                navigate("/game");
             }
         });
 
@@ -22,8 +24,9 @@ const Rooms = () => {
             message: string
         }) => {
             console.log(message);
+
             if (isSuccess) {
-                navigate('rooms');
+                navigate('/rooms');
             }
         })
 
@@ -31,6 +34,7 @@ const Rooms = () => {
 
         return () => {
             socket.off("room:join");
+            socket.off("room:leave");
         }
     }, [socket, navigate]);
 

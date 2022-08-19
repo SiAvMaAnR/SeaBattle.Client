@@ -10,7 +10,7 @@ const EnemyField = ({ isEnd }: {
 }) => {
   const socket = useContext(SocketContext);
   const [field, setField] = useState<number[][]>([]);
-  const [name, setName] = useState<string>("Враг");
+  const [name, setName] = useState<string>("Противник");
 
 
   useEffect(() => {

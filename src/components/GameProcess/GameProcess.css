@@ -1,40 +1,41 @@
 .game-process {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: stretch;
+  align-items: stretch;
   width: 100%;
   height: 95%;
 }
 
 .header {
-  flex: 0 1 auto;
-  height: 10vh;
+  flex: 0 1 50px;
+  margin: 40px 15%;
+  height: 200px;
   display: flex;
-  justify-content: space-between;
-  margin: 0 15%;
+  flex-direction: column;
+  justify-content: stretch;
   align-items: center;
   font-size: 28px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.header > .move {
-  flex: 0 0 300px;
-  overflow: hidden;
-  text-align: center;
+.header > div{
+  margin: 10px;
 }
 
-.header > .result {
-  flex: 0 0 300px;
-  overflow: hidden;
+.header > .move {
   text-align: center;
+  font-size: 40px;
 }
 
 .header > .message {
-  font-size: 36px;
+  text-align: center;
+  font-size: 50px;
 }
 
 .fields {
-  flex: 0 0 90%;
   display: flex;
   justify-content: space-evenly;
+  align-items: stretch;
+  flex: 1 1 100%;
 }

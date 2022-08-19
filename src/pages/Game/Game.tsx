@@ -9,7 +9,6 @@ import "./Game.css";
 
 const Game = () => {
     const socket = useContext(SocketContext);
-    const [message, setMessage] = useState<string>("");
     const [isStart, setIsStart] = useState<boolean>(false);
     const [isInit, setIsInit] = useState<boolean>(false);
     const [isReady, setIsReady] = useState<boolean>(false);
@@ -20,7 +19,7 @@ const Game = () => {
 
         socket.on("room:get:current", (roomId: string) => {
             if (!roomId) {
-                navigate('rooms');
+                navigate('/rooms');
                 return;
             }
 

@@ -31,6 +31,8 @@ const InitField = ({ isReady, setIsReady }: {
 
 
     function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: Coordinate) {
+
+        if (isReady) return;
         setField(field => field.map((row, y) => {
             return row.map((cell, x) => {
                 const isCurrentCell = coordinate.y === y && coordinate.x === x;
@@ -45,16 +47,23 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
     function clickSaveHandler() {
-        socket.emit("game:field:init", field);
+        if (!isReady) {
+            socket.emit("game:field:init", field);
+        }
         socket.emit("game:ready", !isReady);
+
     }
+
 
     return (
         <div className='init-field'>
-            <Field name={isReady ? "ready" : "not ready"} field={field} onclick={clickCellHandler} />
-            <Button onClick={() => clickSaveHandler()}>Готов</Button>
+            <Field name={"Инициализация поля"} field={field} onclick={clickCellHandler} />
+            <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickSaveHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
         </div>
     );
+
 }
+
+
 
 export default InitField;
