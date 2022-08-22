@@ -29,11 +29,11 @@
 .join-room > .container > button {
   font-size: 26px;
   width: 300px;
-  border:  1px white solid;
+  border: 1px white solid;
   height: 50px;
   border-radius: 5px;
   transition: all 1s ease;
-
+  cursor: pointer;
 }
 
 .join-room > .container > button:hover {

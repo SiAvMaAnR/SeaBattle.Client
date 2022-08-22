@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { SocketContext } from '../../App';
+import "./RoomItem.css"
 
 const RoomItem = ({ id, name, count }: {
     id: number,
@@ -9,7 +10,7 @@ const RoomItem = ({ id, name, count }: {
     const socket = useContext(SocketContext);
 
     useEffect(() => {
-        
+
     }, []);
 
     function joinHandler() {
@@ -18,8 +19,12 @@ const RoomItem = ({ id, name, count }: {
 
     return (
         <div className='room-item'>
-            id: {id} | name: {name} | count: {count}
-            <button onClick={() => joinHandler()}>join</button>
+
+
+            <div className='id'>Id: {id} </div>
+            <div className='name'>Name: {name} </div>
+            <div className='count'>Count: {count} </div>
+            <div className='join' onClick={() => joinHandler()}>Войти</div>
         </div>
     )
 }

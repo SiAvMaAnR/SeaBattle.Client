@@ -10,6 +10,8 @@ const GameProcess = () => {
     const [isEnd, setIsEnd] = useState<boolean>(false);
     const [isMyMove, setIsMyMove] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("В бой!");
+    const [moveMessage, setMoveMessage] = useState<string>("");
+
 
     useEffect(() => {
         socket.on("game:shoot", (isHit: boolean) => {
@@ -23,27 +25,34 @@ const GameProcess = () => {
 
         socket.on("game:check", (isWin: boolean) => {
             setIsEnd(true);
-
             setMessage((isWin) ? "Победа" : "Поражение");
         });
 
         socket.on("game:move", (isMove: boolean) => {
             setIsMyMove(isMove);
+
+
+            const message = isEnd
+                ? ""
+                : isMove ? "Твой ход" : "Ходит противник";
+
+            setMoveMessage(message);
         });
+
 
         return () => {
             socket.off("game:shoot");
             socket.off("game:check");
             socket.off("game:move");
         }
-    }, [socket]);
+    }, [socket, isEnd]);
 
 
     return (
         <div className="game-process">
             <div className="header">
                 <div className="message">{message}</div>
-                <div className="move">{isMyMove ? "Твой ход" : "Ходит противник"}</div>
+                <div className="move">{moveMessage}</div>
             </div>
 
             <div className='fields'>

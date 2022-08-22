@@ -8,8 +8,8 @@
   border-radius: 8px;
   border: none;
   height: 100%;
-  padding: 10px;
+  padding: 10px 10px;
   background: rgb(223, 223, 223);
 
-
+  overflow: scroll;
 }
