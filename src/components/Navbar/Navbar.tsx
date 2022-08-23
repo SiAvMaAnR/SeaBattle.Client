@@ -1,14 +1,35 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import "./Navbar.css";
-import { SocketContext } from '../../App';
+import { AuthContext, SocketContext } from '../../App';
 
 const Navbar = ({ isConnected }: {
     isConnected: boolean
 }) => {
     const socket = useContext(SocketContext);
+    const [isLogged, login, logout] = useContext(AuthContext)
+    const [room, setRoom] = useState<string>("");
 
-    function leave() {
+    useEffect(() => {
+        socket.on("room:get:current", (roomId: string) => {
+            setRoom(roomId);
+        });
+
+        return () => {
+            socket.off("room:get:current");
+        }
+    }, [socket])
+
+
+    function leaveHandler() {
         socket.emit("room:leave");
+    }
+
+    function logoutHandler() {
+        logout();
+    }
+
+    function testStatistic() {
+        socket.emit("game:statistic");
     }
 
     return (
@@ -18,7 +39,9 @@ const Navbar = ({ isConnected }: {
             </div>
 
             <div className='leave'>
-                <button onClick={() => leave()}>Leave</button>
+                {room && isLogged && <button onClick={() => leaveHandler()}>Leave</button>}
+                {isLogged && <button onClick={() => logoutHandler()}>Logout</button>}
+                <button onClick={() => testStatistic()}>stat</button>
             </div>
         </div>
     )

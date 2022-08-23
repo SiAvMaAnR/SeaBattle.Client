@@ -55,7 +55,6 @@ const Game = () => {
             socket.emit("room:players:ready");
         });
 
-
         socket.emit("room:get:current");
 
         return () => {

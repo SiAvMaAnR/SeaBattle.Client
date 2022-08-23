@@ -25,6 +25,7 @@ const GameProcess = () => {
 
         socket.on("game:check", (isWin: boolean) => {
             setIsEnd(true);
+            socket.emit("game:statistic");
             setMessage((isWin) ? "Победа" : "Поражение");
         });
 
