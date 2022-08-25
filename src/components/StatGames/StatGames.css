@@ -4,7 +4,6 @@
   align-items: stretch;
   flex-direction: column;
   background: rgb(236, 236, 236);
-  margin: 2px 5px;
   flex: 1 1 90vh;
   border-radius: 5px;
 }
