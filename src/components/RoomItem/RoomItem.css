@@ -9,7 +9,7 @@
   border-radius: 5px;
   font-size: 24px;
   font-family: Arial, Helvetica, sans-serif;
-  border: solid 1px white;
+  border: solid 2px gray;
 }
 
 .room-item > .id {
@@ -30,21 +30,23 @@
 .room-item > .join {
   display: flex;
   flex: 0 0 200px;
-  background: rgb(168, 168, 168);
+  background: rgb(226, 226, 226);
   border-radius: 5px;
-  border: solid aliceblue 1px;
   text-align: center;
   height: 100%;
   justify-content: center;
   align-items: center;
-  font-size: 26px;
+  font-size: 24px;
   cursor: pointer;
   user-select: none;
+  border: solid #999999 2px;
+
   transition: all 0.5s ease;
+  background: #d3d3d3;
 }
 
-
-.room-item > .join:hover{
-    background: #bebebe;
-    transition: all 0.5s ease;
+.room-item > .join:hover {
+  background: #bebebe;
+  transition: all 0.5s ease;
+  border: solid white 2px;
 }

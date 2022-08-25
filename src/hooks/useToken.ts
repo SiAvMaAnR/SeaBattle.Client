@@ -16,11 +16,9 @@ const useToken = (): [
         if (token) {
             localStorage.setItem("token", token);
             setToken(token);
-            socket.emit("jwt", token);
         } else {
             localStorage.removeItem("token");
             setToken(null);
-            socket.emit("jwt", null);
         }
     };
 

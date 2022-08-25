@@ -6,7 +6,9 @@ import Navbar from "./components/Navbar/Navbar";
 import { useAuth, useToken, useUser } from "./hooks";
 import Game from "./pages/Game/Game";
 import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 import Rooms from "./pages/Rooms/Rooms";
+import Statistic from "./pages/Statistic/Statistic";
 
 const socket = io("http://localhost:3000");
 
@@ -34,13 +36,16 @@ function App() {
       setIsConnected(false);
     });
 
-
     return () => {
       socket.off("connect");
       socket.off("disconnect");
     }
   }, []);
 
+
+  useEffect(() => {
+    socket.emit("jwt", token);
+  }, [token])
 
   return (
     <div className="app">
@@ -56,10 +61,12 @@ function App() {
                   <Routes>
                     <Route path="/*" element={<Rooms />} />
                     <Route path="/game" element={<Game />} />
+                    <Route path="/statistic" element={<Statistic />} />
                   </Routes>
                   :
                   <Routes>
                     <Route path="/*" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                   </Routes>
                 }
               </BrowserRouter>

@@ -11,7 +11,7 @@ const GameProcess = () => {
     const [isMyMove, setIsMyMove] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("В бой!");
     const [moveMessage, setMoveMessage] = useState<string>("");
-
+    const [isSave, setIsSave] = useState<boolean>(false);
 
     useEffect(() => {
         socket.on("game:shoot", (isHit: boolean) => {
@@ -24,8 +24,14 @@ const GameProcess = () => {
         });
 
         socket.on("game:check", (isWin: boolean) => {
+
             setIsEnd(true);
-            socket.emit("game:statistic");
+
+            if (!isSave) {
+                socket.emit("game:statistic");
+                setIsSave(true);
+            }
+
             setMessage((isWin) ? "Победа" : "Поражение");
         });
 

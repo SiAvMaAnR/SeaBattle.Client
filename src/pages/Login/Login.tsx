@@ -43,9 +43,17 @@ const Login = () => {
                 <input type="text" placeholder='password' onChange={(e) => setPasswordInput(e.target.value)} value={passwordInput} />
             </div>
 
-            <div>
-                <Button onClick={loginHandler}>Login</Button>
+            <div className='buttons'>
+                <div>
+                    <Button onClick={loginHandler}>Login</Button>
+                </div>
+
+
+                <div>
+                    <Button onClick={registerHandler}>Register</Button>
+                </div>
             </div>
+
         </div>
     )
 }

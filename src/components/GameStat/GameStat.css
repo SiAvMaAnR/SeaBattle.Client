@@ -1,0 +1,16 @@
+.game-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  border: solid 2px gray;
+  margin: 5px 15px;
+  border-radius: 5px;
+  background: rgb(221, 221, 221);
+}
+
+.game-stat > div {
+  flex: 1 1;
+  text-align: center;
+  font-size: 24px;
+}

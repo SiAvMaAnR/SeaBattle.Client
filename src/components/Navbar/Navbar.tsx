@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import "./Navbar.css";
 import { AuthContext, SocketContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ isConnected }: {
     isConnected: boolean
@@ -8,6 +9,7 @@ const Navbar = ({ isConnected }: {
     const socket = useContext(SocketContext);
     const [isLogged, login, logout] = useContext(AuthContext)
     const [room, setRoom] = useState<string>("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         socket.on("room:get:current", (roomId: string) => {
@@ -24,24 +26,24 @@ const Navbar = ({ isConnected }: {
         socket.emit("room:leave");
     }
 
+
     function logoutHandler() {
         logout();
     }
 
-    function testStatistic() {
-        socket.emit("game:statistic");
+    function homeHandler() {
+        navigate("/rooms")
     }
 
     return (
         <div className='navbar'>
             <div className='connected'>
-                <div> {(isConnected) ? "Connected" : "Not connected"}</div>
+                <div onClick={homeHandler}> {(isConnected) ? "Connected" : "Not connected"}</div>
             </div>
 
             <div className='leave'>
                 {room && isLogged && <button onClick={() => leaveHandler()}>Leave</button>}
                 {isLogged && <button onClick={() => logoutHandler()}>Logout</button>}
-                <button onClick={() => testStatistic()}>stat</button>
             </div>
         </div>
     )
