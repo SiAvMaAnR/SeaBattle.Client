@@ -43,6 +43,7 @@
   justify-content: space-evenly;
   width: 100%;
   margin-bottom: 50px;
+  flex-wrap: wrap;
 }
 
 .join-room > .container > .join > button {

@@ -13,7 +13,7 @@
 }
 
 .room-item > .id {
-  flex: 0 0 200px;
+  flex: 0 1 150px;
   text-align: center;
 }
 
@@ -29,7 +29,7 @@
 
 .room-item > .join {
   display: flex;
-  flex: 0 0 200px;
+  flex: 0 1 200px;
   background: rgb(226, 226, 226);
   border-radius: 5px;
   text-align: center;

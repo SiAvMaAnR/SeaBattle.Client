@@ -4,11 +4,11 @@
 }
 
 .room-list > .container {
-  flex: 0 0 91vh;
+  flex: 0 0 90vh;
   border-radius: 8px;
   border: none;
   height: 100%;
-  padding: 10px 10px;
+  padding: 10px 5%;
   background: rgb(223, 223, 223);
 
   overflow: scroll;

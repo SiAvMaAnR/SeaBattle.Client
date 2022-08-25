@@ -5,6 +5,7 @@ import "./InitField.css";
 import { SocketContext } from '../../App';
 import Cell from '../Cell/enums/CellEnum';
 import Button from '../UI/Button/Button';
+import ShipsPanel from '../ShipsPanel/ShipsPanel';
 
 const InitField = ({ isReady, setIsReady }: {
     isReady: boolean,
@@ -59,6 +60,7 @@ const InitField = ({ isReady, setIsReady }: {
         <div className='init-field'>
             <Field name={"Инициализация поля"} field={field} onclick={clickCellHandler} />
             <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickSaveHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
+            <ShipsPanel></ShipsPanel>
         </div>
     );
 

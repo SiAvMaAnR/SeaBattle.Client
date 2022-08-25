@@ -7,12 +7,19 @@ import Coordinate from '../../common/types/coordinate';
 const Cell = ({ onclick, coord, children }: {
     children: CellEnum,
     onclick: Function,
-    coord: Coordinate
+    coord: Coordinate,
 }) => {
 
     const [cell, setCell] = useState<CSS.Properties>({});
     const [coordinate, setCoordinate] = useState<Coordinate>();
 
+    function onDropHandler(event: React.DragEvent<HTMLDivElement>) {
+        console.log("Drop", event.target)
+    }
+
+    function onDragOverHandler(event: React.DragEvent<HTMLDivElement>) {
+        console.log("DragOver", event.target)
+    }
 
     useEffect(() => {
 
@@ -28,7 +35,7 @@ const Cell = ({ onclick, coord, children }: {
     }, [children, coord]);
 
     return (
-        <div onClick={(e) => onclick(e, coordinate)} className='cell' style={cell} />
+        <div onDrop={(e) => onDropHandler(e)} onDragOver={(e) => onDragOverHandler(e)} onClick={(e) => onclick(e, coordinate)} className='cell' style={cell} />
     )
 }
 

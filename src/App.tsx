@@ -51,31 +51,33 @@ function App() {
 
   return (
     <div className="app">
-      <TokenContext.Provider value={[token, setToken]}>
-        <AuthContext.Provider value={[isLogged, login, logout]}>
-          <UserContext.Provider value={[user]}>
-            <SocketContext.Provider value={socket}>
-              <BrowserRouter>
-                <Navbar isConnected={isConnected}></Navbar>
+      <DndProvider backend={HTML5Backend}>
+        <TokenContext.Provider value={[token, setToken]}>
+          <AuthContext.Provider value={[isLogged, login, logout]}>
+            <UserContext.Provider value={[user]}>
+              <SocketContext.Provider value={socket}>
+                <BrowserRouter>
+                  <Navbar isConnected={isConnected}></Navbar>
 
-                {(isLogged)
-                  ?
-                  <Routes>
-                    <Route path="/*" element={<Rooms />} />
-                    <Route path="/game" element={<Game />} />
-                    <Route path="/statistic" element={<Statistic />} />
-                  </Routes>
-                  :
-                  <Routes>
-                    <Route path="/*" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                  </Routes>
-                }
-              </BrowserRouter>
-            </SocketContext.Provider>
-          </UserContext.Provider>
-        </AuthContext.Provider>
-      </TokenContext.Provider >
+                  {(isLogged)
+                    ?
+                    <Routes>
+                      <Route path="/*" element={<Rooms />} />
+                      <Route path="/game" element={<Game />} />
+                      <Route path="/statistic" element={<Statistic />} />
+                    </Routes>
+                    :
+                    <Routes>
+                      <Route path="/*" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                    </Routes>
+                  }
+                </BrowserRouter>
+              </SocketContext.Provider>
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </TokenContext.Provider >
+      </DndProvider>
     </div >
 
   );
