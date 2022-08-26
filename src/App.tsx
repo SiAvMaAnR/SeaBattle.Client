@@ -50,7 +50,7 @@ function App() {
   }, [token])
 
   return (
-    <div className="app">
+    <div className="app" onContextMenu={(e) => { e.preventDefault() }}>
       <DndProvider backend={HTML5Backend}>
         <TokenContext.Provider value={[token, setToken]}>
           <AuthContext.Provider value={[isLogged, login, logout]}>

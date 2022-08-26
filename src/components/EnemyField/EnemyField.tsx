@@ -29,7 +29,7 @@ const EnemyField = ({ isEnd }: {
 
 
 
-  function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: Coordinate) {
+  function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: Coordinate | undefined) {
     if (!isEnd) {
       socket.emit("game:shoot", coordinate);
     }
@@ -38,7 +38,7 @@ const EnemyField = ({ isEnd }: {
 
   return (
     <div className='container'>
-      <Field name={name} field={field} onclick={clickCellHandler} />
+      <Field name={name} field={field} onclick={clickCellHandler} onContextMenu={clickCellHandler} />
     </div>
 
   )

@@ -10,3 +10,8 @@
 .init-field > *{
     margin: 15px 0px;
 }
+
+.init-field > .buttons{
+    display: flex;
+    justify-content: space-around;
+}

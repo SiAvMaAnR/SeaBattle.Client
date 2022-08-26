@@ -24,7 +24,7 @@ const MyField = () => {
 
     }, [socket]);
 
-    function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType) {
+    function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
         // console.log(coordinate);
     }
 
@@ -34,7 +34,7 @@ const MyField = () => {
 
     return (
         <div className='container'>
-            <Field name={name} field={field} onclick={clickCellHandler} />
+            <Field name={name} field={field} onclick={clickCellHandler} onContextMenu={clickCellHandler} />
         </div>
     );
 }

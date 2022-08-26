@@ -2,10 +2,11 @@ import Cell from '../Cell/Cell';
 import CoordinateType from '../../common/types/coordinate';
 import "./Field.css";
 
-const Field = ({ name, field, onclick, clearFieldHandler }: {
+const Field = ({ name, field, onclick, onContextMenu, clearFieldHandler }: {
     name: string,
     field: number[][],
-    onclick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType) => void
+    onclick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) => void,
+    onContextMenu: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) => void,
     clearFieldHandler?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
 
@@ -31,7 +32,7 @@ const Field = ({ name, field, onclick, clearFieldHandler }: {
                                     <td key={`td${y}`} className='header-left'>{leftHeader[y]}</td>
                                     {items.map((item, x) =>
                                         <td key={`td${y}${x}`} >
-                                            <Cell key={`cell${y}${x}`} onclick={onclick} coord={{ y: y, x: x }}>{item}</Cell>
+                                            <Cell key={`cell${y}${x}`} onclick={onclick} onContextMenu={onContextMenu} coord={{ y: y, x: x }}>{item}</Cell>
                                         </td>)
                                     }
                                 </tr>

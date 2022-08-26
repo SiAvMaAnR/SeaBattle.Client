@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import CellEnum from './enums/CellEnum'
 import CSS from 'csstype';
-import Coordinate from '../../common/types/coordinate';
+import CoordinateType from '../../common/types/coordinate';
 import "./Cell.css";
 
 
-const Cell = ({ onclick, coord, children }: {
+const Cell = ({ onclick, coord, onContextMenu, children }: {
     children: CellEnum,
-    onclick: Function,
-    coord: Coordinate,
+    onclick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) => void,
+    onContextMenu: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) => void,
+    coord: CoordinateType,
 }) => {
 
     const [cell, setCell] = useState<CSS.Properties>({});
-    const [coordinate, setCoordinate] = useState<Coordinate>();
+    const [coordinate, setCoordinate] = useState<CoordinateType>();
 
     useEffect(() => {
 
@@ -29,7 +30,7 @@ const Cell = ({ onclick, coord, children }: {
     }, [children, coord]);
 
     return (
-        <div onClick={(e) => onclick(e, coordinate)} className='cell' style={cell} />
+        <div onClick={(e) => onclick(e, coordinate)} onContextMenu={(e) => onContextMenu(e, coordinate)} className='cell' style={cell} />
     )
 }
 
