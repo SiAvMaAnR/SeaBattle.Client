@@ -1,10 +1,12 @@
 import Cell from '../Cell/Cell';
+import CoordinateType from '../../common/types/coordinate';
 import "./Field.css";
 
-const Field = ({ name, field, onclick }: {
+const Field = ({ name, field, onclick, clearFieldHandler }: {
     name: string,
     field: number[][],
-    onclick: Function
+    onclick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType) => void
+    clearFieldHandler?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
 
     const topHeader = ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];

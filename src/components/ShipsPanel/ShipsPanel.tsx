@@ -1,18 +1,20 @@
 import React from 'react';
 import "./ShipsPanel.css";
 
-const ShipsPanel = () => {
+const ShipsPanel = ({ onClick }: {
+    onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, lenght: number) => void
+}) => {
 
-    function onDragStart(event: React.DragEvent<HTMLDivElement>) {
-        console.log("DragStart",event.target);
-    }
+
 
     return (
         <div className='panel'>
-            <div onDragStart={(e) => onDragStart(e)} draggable="true" className='dd-cell' />
-
-
-            <div onDragStart={(e) => onDragStart(e)} draggable="true" className='dd-cell' />
+            <div className='container'>
+                <div onClick={(e) => onClick(e, 1)} className='ship s1'></div>
+                <div onClick={(e) => onClick(e, 2)} className='ship s2'></div>
+                <div onClick={(e) => onClick(e, 3)} className='ship s3'></div>
+                <div onClick={(e) => onClick(e, 4)} className='ship s4'></div>
+            </div>
         </div>
     )
 }

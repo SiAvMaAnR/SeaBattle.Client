@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Coordinate from '../../common/types/coordinate';
 import Field from '../Field/Field';
-import "./InitField.css";
 import { SocketContext } from '../../App';
 import Cell from '../Cell/enums/CellEnum';
 import Button from '../UI/Button/Button';
 import ShipsPanel from '../ShipsPanel/ShipsPanel';
+import "./InitField.css";
+
 
 const InitField = ({ isReady, setIsReady }: {
     isReady: boolean,
@@ -15,12 +16,14 @@ const InitField = ({ isReady, setIsReady }: {
 
     const [field, setField] = useState<number[][]>([]);
     const [name, setName] = useState<string>("Инициализация поля");
-
+    const [countCell, setCountCell] = useState<number>(0);
+    const [block, setBlock] = useState<boolean>(false);
 
     useEffect(() => {
         socket.on("game:field:my", (field: number[][]) => {
             setField(field);
         });
+
 
         socket.emit("game:field:my");
 
@@ -33,8 +36,10 @@ const InitField = ({ isReady, setIsReady }: {
 
     function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: Coordinate) {
 
-        if (isReady) return;
-        setField(field => field.map((row, y) => {
+        if (isReady || block) return;
+
+
+        const newField = field.map((row, y) => {
             return row.map((cell, x) => {
                 const isCurrentCell = coordinate.y === y && coordinate.x === x;
 
@@ -44,7 +49,20 @@ const InitField = ({ isReady, setIsReady }: {
 
                 return cell;
             })
-        }))
+        });
+
+        setField(newField);
+        setCountCell(count => count - 1);
+    }
+
+
+    function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, lenght: number) {
+        console.log(lenght);
+    }
+
+
+    function clearFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        setField(field => field.filter(row => row.fill(0)));
     }
 
     function clickSaveHandler() {
@@ -52,15 +70,15 @@ const InitField = ({ isReady, setIsReady }: {
             socket.emit("game:field:init", field);
         }
         socket.emit("game:ready", !isReady);
-
     }
 
 
     return (
         <div className='init-field'>
-            <Field name={"Инициализация поля"} field={field} onclick={clickCellHandler} />
+            <Field clearFieldHandler={clearFieldHandler} name={"Инициализация поля"} field={field} onclick={clickCellHandler} />
             <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickSaveHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
-            <ShipsPanel></ShipsPanel>
+            <Button onClick={clearFieldHandler}>{"Очистить"}</Button>
+            <ShipsPanel onClick={clickShipHandler}></ShipsPanel>
         </div>
     );
 

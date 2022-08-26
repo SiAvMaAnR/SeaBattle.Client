@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import CellEnum from './enums/CellEnum'
 import CSS from 'csstype';
-import "./Cell.css";
 import Coordinate from '../../common/types/coordinate';
+import "./Cell.css";
+
 
 const Cell = ({ onclick, coord, children }: {
     children: CellEnum,
@@ -13,15 +14,8 @@ const Cell = ({ onclick, coord, children }: {
     const [cell, setCell] = useState<CSS.Properties>({});
     const [coordinate, setCoordinate] = useState<Coordinate>();
 
-    function onDropHandler(event: React.DragEvent<HTMLDivElement>) {
-        console.log("Drop", event.target)
-    }
-
-    function onDragOverHandler(event: React.DragEvent<HTMLDivElement>) {
-        console.log("DragOver", event.target)
-    }
-
     useEffect(() => {
+
 
         setCoordinate(coord);
 
@@ -35,7 +29,7 @@ const Cell = ({ onclick, coord, children }: {
     }, [children, coord]);
 
     return (
-        <div onDrop={(e) => onDropHandler(e)} onDragOver={(e) => onDragOverHandler(e)} onClick={(e) => onclick(e, coordinate)} className='cell' style={cell} />
+        <div onClick={(e) => onclick(e, coordinate)} className='cell' style={cell} />
     )
 }
 

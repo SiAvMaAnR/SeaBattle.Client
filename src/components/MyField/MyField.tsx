@@ -25,7 +25,7 @@ const MyField = () => {
     }, [socket]);
 
     function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType) {
-        console.log(coordinate);
+        // console.log(coordinate);
     }
 
     useEffect(() => {
