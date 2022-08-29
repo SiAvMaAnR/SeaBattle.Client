@@ -47,12 +47,26 @@ const InitField = ({ isReady, setIsReady }: {
     }, [saves, tempSave]);
 
 
+    useEffect(() => {
+        if (countCell <= 0) {
+            setSaves(saves => [...saves, {
+                field: field,
+                ships: saves[saves.length - 1]?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
+            }]);
+            setTempSave(save => {
+                return {
+                    field: field,
+                    ships: save?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
+                }
+            });
+
+            setActiveId(0);
+        }
+    }, [activeId, countCell, field]);
+
     async function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
-
-        if (isReady || countCell <= 0 || block) return;
-        if (activeId === 0) return;
-        let count = countCell;
+        if (isReady || countCell <= 0 || block || activeId === 0) return;
 
         const newField = field.map((row, y) => {
             return row.map((cell, x) => {
@@ -62,7 +76,6 @@ const InitField = ({ isReady, setIsReady }: {
                     cell = Cell.Exists;
                     setCountCell(count => count - 1);
                     setIsChange(true);
-                    count--;
                 }
 
                 return cell;
@@ -70,23 +83,6 @@ const InitField = ({ isReady, setIsReady }: {
         });
 
         setField(newField);
-
-
-        //вынести в юзэффект
-        if (count <= 0) {
-            setSaves(saves => [...saves, {
-                field: newField,
-                ships: saves[saves.length - 1]?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
-            }]);
-            setTempSave(save => {
-                return {
-                    field: newField,
-                    ships: save?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
-                }
-            });
-
-            setActiveId(0);
-        }
     }
 
 
