@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import CoordinateType from '../../common/types/coordinate';
 import Field from '../Field/Field';
 import { SocketContext } from '../../App';
@@ -22,13 +22,15 @@ const InitField = ({ isReady, setIsReady }: {
     const [activeId, setActiveId] = useState<number>(0);
     const [isChange, setIsChange] = useState<boolean>(false);
     const [tempSave, setTempSave] = useState<ISave>();
+    const defaultShips = useMemo(() => [0, 0, 0, 0, 0], []);
+    const defaultField = useMemo(() => Array(10).fill(Array(10).fill(0)), [])
 
     useEffect(() => {
         socket.on("game:field:my", (field: number[][]) => {
             setField(field);
             setSaves([{
                 field: field,
-                ships: [0, 0, 0, 0, 0]
+                ships: defaultShips
             }]);
         });
 
@@ -38,7 +40,7 @@ const InitField = ({ isReady, setIsReady }: {
         return () => {
             socket.off("game:field:my");
         }
-    }, [socket]);
+    }, [socket, defaultShips]);
 
     useEffect(() => {
         console.log("SAVES: ", saves);
@@ -56,13 +58,13 @@ const InitField = ({ isReady, setIsReady }: {
             setTempSave(save => {
                 return {
                     field: field,
-                    ships: save?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
+                    ships: save?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship) ?? defaultShips,
                 }
             });
 
             setActiveId(0);
         }
-    }, [activeId, countCell, field]);
+    }, [countCell]);
 
     async function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
@@ -133,17 +135,24 @@ const InitField = ({ isReady, setIsReady }: {
         setField(field => field.filter(row => row.fill(0)));
         setTempSave({
             field: [],
-            ships: [0, 0, 0, 0, 0]
+            ships: defaultShips
         });
         setCountCell(0);
         setActiveId(0);
+        setSaves([{
+            field: field,
+            ships: defaultShips
+        }]);
     }
 
 
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
         setSaves(saves => {
-            const newSaves = saves.filter((save, index) => index !== saves.length - 1);
+            const newSaves = saves.filter((save, index) => index !== saves.length - 1) ?? {
+                field: defaultField,
+                ships: defaultShips
+            };
             const saveField = newSaves[newSaves.length - 1]?.field ?? field.map(row => row.fill(0));
             setField(saveField);
             return newSaves;
@@ -162,6 +171,8 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
 
+    const lastSave = saves[saves.length - 1];
+
     return (
         <div className='init-field'>
 
@@ -179,10 +190,26 @@ const InitField = ({ isReady, setIsReady }: {
 
             <ShipsPanel>
                 <div className='container'>
-                    <div onClick={(e) => clickShipHandler(e, 1)} id={"s1"} className={`ship${activeId === 1 ? " active" : ""}`}></div>
-                    <div onClick={(e) => clickShipHandler(e, 2)} id={"s2"} className={`ship${activeId === 2 ? " active" : ""}`}></div>
-                    <div onClick={(e) => clickShipHandler(e, 3)} id={"s3"} className={`ship${activeId === 3 ? " active" : ""}`}></div>
-                    <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
+                    <div className='ship-info'>
+                        <div className='info'>{lastSave?.ships?.at(1) ?? "*"}</div>
+                        <div onClick={(e) => clickShipHandler(e, 1)} id={"s1"} className={`ship${activeId === 1 ? " active" : ""}`}></div>
+                    </div>
+
+                    <div className='ship-info'>
+                        <div className='info'>{lastSave?.ships?.at(2) ?? "*"}</div>
+                        <div onClick={(e) => clickShipHandler(e, 2)} id={"s2"} className={`ship${activeId === 2 ? " active" : ""}`}></div>
+                    </div>
+
+
+                    <div className='ship-info'>
+                        <div className='info'>{lastSave?.ships?.at(3) ?? "*"}</div>
+                        <div onClick={(e) => clickShipHandler(e, 3)} id={"s3"} className={`ship${activeId === 3 ? " active" : ""}`}></div>
+                    </div>
+
+                    <div className='ship-info'>
+                        <div className='info'>{lastSave?.ships?.at(4) ?? "*"}</div>
+                        <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
+                    </div>
                 </div>
             </ShipsPanel >
         </div >
@@ -193,7 +220,7 @@ const InitField = ({ isReady, setIsReady }: {
 
 interface ISave {
     field: number[][],
-    ships?: number[]
+    ships: number[]
 }
 
 
