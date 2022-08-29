@@ -27,7 +27,8 @@ const InitField = ({ isReady, setIsReady }: {
         socket.on("game:field:my", (field: number[][]) => {
             setField(field);
             setSaves([{
-                field: field
+                field: field,
+                ships: [0, 0, 0, 0, 0]
             }]);
         });
 
@@ -38,6 +39,12 @@ const InitField = ({ isReady, setIsReady }: {
             socket.off("game:field:my");
         }
     }, [socket]);
+
+    useEffect(() => {
+        console.log("SAVES: ", saves);
+        console.log("TEMP: ", tempSave);
+
+    }, [saves, tempSave]);
 
 
     async function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
@@ -64,13 +71,20 @@ const InitField = ({ isReady, setIsReady }: {
 
         setField(newField);
 
+
+        //вынести в юзэффект
         if (count <= 0) {
-            setSaves([...saves, {
-                field: newField
+            setSaves(saves => [...saves, {
+                field: newField,
+                ships: saves[saves.length - 1]?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
             }]);
-            setTempSave({
-                field: newField
+            setTempSave(save => {
+                return {
+                    field: newField,
+                    ships: save?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
+                }
             });
+
             setActiveId(0);
         }
     }
@@ -110,14 +124,20 @@ const InitField = ({ isReady, setIsReady }: {
 
 
         setActiveId((activeId === shipId) ? 0 : shipId);
-        setTempSave(saves[saves.length - 1] ?? { field: [...field] });
+        setTempSave(save => {
+            return saves[saves.length - 1] ?? {
+                field: save?.field,
+                ships: save?.ships
+            }
+        });
     }
 
 
     function clearFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         setField(field => field.filter(row => row.fill(0)));
         setTempSave({
-            field: []
+            field: [],
+            ships: [0, 0, 0, 0, 0]
         });
         setCountCell(0);
         setActiveId(0);
@@ -126,11 +146,14 @@ const InitField = ({ isReady, setIsReady }: {
 
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
-        saves.pop();
+        setSaves(saves => {
+            const newSaves = saves.filter((save, index) => index !== saves.length - 1);
+            const saveField = newSaves[newSaves.length - 1]?.field ?? field.map(row => row.fill(0));
+            setField(saveField);
+            return newSaves;
+        });
 
-        const saveField = saves[saves.length - 1]?.field ?? field.map(row => row.fill(0));
 
-        setField(saveField);
         setCountCell(0);
         setActiveId(0);
     }
@@ -174,7 +197,7 @@ const InitField = ({ isReady, setIsReady }: {
 
 interface ISave {
     field: number[][],
-    ships?: Record<number, number>
+    ships?: number[]
 }
 
 

@@ -1,4 +1,5 @@
-const enum Cell{
+const enum Cell {
+    Incorrect = -1,
     Empty = 0,
     Exists = 1,
     Missed = 2,
