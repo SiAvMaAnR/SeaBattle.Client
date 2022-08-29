@@ -98,6 +98,7 @@ const InitField = ({ isReady, setIsReady }: {
     function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, shipId: number) {
 
         setTempSave(field);
+        setCountCell(shipId);
 
 
         if (countCell > 0 && isChange && activeId !== 0) {
@@ -106,28 +107,28 @@ const InitField = ({ isReady, setIsReady }: {
         }
 
 
-        setActiveId(activeId => {
-            return (activeId === shipId) ? 0 : shipId;
-        });
-
-
-        setCountCell(shipId);
-
+        setActiveId((activeId === shipId) ? 0 : shipId);
     }
 
 
     function clearFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         setField(field => field.filter(row => row.fill(0)));
-        setOldFields([]);
+        setTempSave([]);
         setCountCell(0);
+        setActiveId(0);
     }
 
 
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        const oldField = oldFields.pop() ?? [...field];
+
+        oldFields.pop();
+
+        const oldField = oldFields[oldFields.length - 1] ?? field.map(row => row.fill(0));
 
         setField(oldField);
+        setTempSave(oldField);
         setCountCell(0);
+        setActiveId(0);
     }
 
     function clickReadyHandler() {
