@@ -1,17 +1,38 @@
-.init-field{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: stretch;
-    width: 100%;
-    height: 100%;
+.init-field {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 }
 
-.init-field > *{
-    margin: 15px 0px;
+.init-field > * {
+  margin: 15px 0px;
 }
 
-.init-field > .buttons{
-    display: flex;
-    justify-content: space-around;
+.init-field > .buttons {
+  display: flex;
+  flex: 0 1 25%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.init-field > .field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 50%;
+}
+
+.init-field > .panel {
+  display: flex;
+  flex: 0 1 25%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.init-field > .buttons > * {
+    margin: 10px 0 ;
 }

@@ -19,6 +19,8 @@ const InitField = ({ isReady, setIsReady }: {
     const [countCell, setCountCell] = useState<number>(0);
     const [block, setBlock] = useState<boolean>(false);
     const [oldFields, setOldFields] = useState<number[][][]>([]);
+    const [activeId, setActiveId] = useState<number>(0);
+    const [isChange, setIsChange] = useState<boolean>(false);
 
     useEffect(() => {
         socket.on("game:field:my", (field: number[][]) => {
@@ -38,10 +40,10 @@ const InitField = ({ isReady, setIsReady }: {
 
     function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
-        console.log("right");
 
-        if (isReady || block) return;
-        if (countCell <= 0) return;
+        if (isReady || countCell <= 0 || block) return;
+        if (activeId === 0) return;
+
 
         const newField = field.map((row, y) => {
             return row.map((cell, x) => {
@@ -50,6 +52,7 @@ const InitField = ({ isReady, setIsReady }: {
                 if (isCurrentCell && cell === Cell.Empty) {
                     cell = Cell.Exists;
                     setCountCell(count => count - 1);
+                    setIsChange(true);
                 }
 
                 return cell;
@@ -62,7 +65,6 @@ const InitField = ({ isReady, setIsReady }: {
 
     function clickGodCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
         e.preventDefault();
-        console.log("left");
 
         if (isReady) return;
 
@@ -82,16 +84,27 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
 
-    function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, lenght: number) {
+    function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, lenghtId: number) {
 
         console.log(countCell);
 
 
-        if (countCell > 0) {
-            setField(oldFields.pop() ?? []);
+        if (countCell > 0 && (activeId !== lenghtId)) {
+            if (isChange) {
+                setField(oldFields.pop() ?? []);
+                setIsChange(false);
+            }
         }
 
-        setCountCell(lenght);
+
+        setActiveId(activeId => {
+            return (activeId === lenghtId) ? 0 : lenghtId;
+        });
+
+
+
+
+        setCountCell(lenghtId);
         setOldFields([...oldFields, field]);
     }
 
@@ -104,7 +117,7 @@ const InitField = ({ isReady, setIsReady }: {
 
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         const oldField = oldFields.pop() ?? [...field];
-        
+
         console.log(oldField);
 
         setField(oldField);
@@ -121,19 +134,28 @@ const InitField = ({ isReady, setIsReady }: {
 
     return (
         <div className='init-field'>
+
+            <div className='buttons'>
+                <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickSaveHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
+                <Button onClick={backFieldHandler}>{"Отменить"}</Button>
+                <Button onClick={clearFieldHandler}>{"Очистить"}</Button>
+            </div>
+
             <Field clearFieldHandler={clearFieldHandler}
                 onContextMenu={clickGodCellHandler}
                 name={"Инициализация поля"}
                 field={field}
                 onclick={clickCellHandler} />
-            <div className='buttons'>
-                <Button onClick={clearFieldHandler}>{"Очистить"}</Button>
-                <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickSaveHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
-                <Button onClick={backFieldHandler}>{"Отменить"}</Button>
-            </div>
 
-            <ShipsPanel onClick={clickShipHandler}></ShipsPanel>
-        </div>
+            <ShipsPanel>
+                <div className='container'>
+                    <div onClick={(e) => clickShipHandler(e, 1)} id={"s1"} className={`ship${activeId === 1 ? " active" : ""}`}></div>
+                    <div onClick={(e) => clickShipHandler(e, 2)} id={"s2"} className={`ship${activeId === 2 ? " active" : ""}`}></div>
+                    <div onClick={(e) => clickShipHandler(e, 3)} id={"s3"} className={`ship${activeId === 3 ? " active" : ""}`}></div>
+                    <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
+                </div>
+            </ShipsPanel >
+        </div >
     );
 
 }

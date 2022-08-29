@@ -1,11 +1,13 @@
 .panel {
-    width: 100%;
+    flex: 0 0 100%;
 }
 
 .panel > .container {
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  height: 40%;
 }
 
 .panel > .container > .ship:empty {
@@ -13,26 +15,31 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.5s ease;
-  background: #00008B;
+  background: #0000ca;
 }
 
 .panel > .container > .ship:hover {
-  opacity: 0.7;
   transition: all 0.3s ease;
 }
 
-.ship.s1 {
+#s1 {
   width: 50px;
 }
 
-.ship.s2 {
+#s2 {
   width: 100px;
 }
 
-.ship.s3 {
+#s3 {
   width: 150px;
 }
 
-.ship.s4 {
+#s4 {
   width: 200px;
+}
+
+
+.ship:empty.active {
+    background: rgb(0, 32, 121) !important;
+    transition: all ease 1s;
 }
