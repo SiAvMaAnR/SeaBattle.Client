@@ -67,9 +67,8 @@ const InitField = ({ isReady, setIsReady }: {
 
         if (count <= 0) {
             setOldFields([...oldFields, newField]);
-            if (activeId !== 0) {
-                setActiveId(0);
-            }
+            setTempSave(newField);
+            setActiveId(0);
         }
     }
 
@@ -97,17 +96,18 @@ const InitField = ({ isReady, setIsReady }: {
 
     function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, shipId: number) {
 
-        setTempSave(field);
         setCountCell(shipId);
 
-
+        //корабль не доставлен/ осущ. изменения сетки/ есть выбранный корабль
         if (countCell > 0 && isChange && activeId !== 0) {
-            setField(tempSave ?? [...field]);
+            const newField = tempSave ?? [...field];
+            setField(newField);
             setIsChange(false);
         }
 
 
         setActiveId((activeId === shipId) ? 0 : shipId);
+        setTempSave(oldFields[oldFields.length - 1] ?? [...field]);
     }
 
 
@@ -126,7 +126,6 @@ const InitField = ({ isReady, setIsReady }: {
         const oldField = oldFields[oldFields.length - 1] ?? field.map(row => row.fill(0));
 
         setField(oldField);
-        setTempSave(oldField);
         setCountCell(0);
         setActiveId(0);
     }
