@@ -21,6 +21,7 @@ const InitField = ({ isReady, setIsReady }: {
     const [oldFields, setOldFields] = useState<number[][][]>([]);
     const [activeId, setActiveId] = useState<number>(0);
     const [isChange, setIsChange] = useState<boolean>(false);
+    const [tempSave, setTempSave] = useState<number[][]>([]);
 
     useEffect(() => {
         socket.on("game:field:my", (field: number[][]) => {
@@ -36,14 +37,16 @@ const InitField = ({ isReady, setIsReady }: {
         }
     }, [socket]);
 
+    useEffect(() => {
+        console.log(oldFields);
+    }, [oldFields])
 
-
-    function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
+    async function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
 
         if (isReady || countCell <= 0 || block) return;
         if (activeId === 0) return;
-
+        let count = countCell;
 
         const newField = field.map((row, y) => {
             return row.map((cell, x) => {
@@ -53,6 +56,7 @@ const InitField = ({ isReady, setIsReady }: {
                     cell = Cell.Exists;
                     setCountCell(count => count - 1);
                     setIsChange(true);
+                    count--;
                 }
 
                 return cell;
@@ -60,6 +64,13 @@ const InitField = ({ isReady, setIsReady }: {
         });
 
         setField(newField);
+
+        if (count <= 0) {
+            setOldFields([...oldFields, newField]);
+            if (activeId !== 0) {
+                setActiveId(0);
+            }
+        }
     }
 
 
@@ -84,33 +95,30 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
 
-    function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, lenghtId: number) {
+    function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, shipId: number) {
 
-        console.log(countCell);
+        setTempSave(field);
 
 
-        if (countCell > 0 && (activeId !== lenghtId)) {
-            if (isChange) {
-                setField(oldFields.pop() ?? []);
-                setIsChange(false);
-            }
+        if (countCell > 0 && isChange && activeId !== 0) {
+            setField(tempSave ?? [...field]);
+            setIsChange(false);
         }
 
 
         setActiveId(activeId => {
-            return (activeId === lenghtId) ? 0 : lenghtId;
+            return (activeId === shipId) ? 0 : shipId;
         });
 
 
+        setCountCell(shipId);
 
-
-        setCountCell(lenghtId);
-        setOldFields([...oldFields, field]);
     }
 
 
     function clearFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         setField(field => field.filter(row => row.fill(0)));
+        setOldFields([]);
         setCountCell(0);
     }
 
@@ -118,13 +126,11 @@ const InitField = ({ isReady, setIsReady }: {
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         const oldField = oldFields.pop() ?? [...field];
 
-        console.log(oldField);
-
         setField(oldField);
         setCountCell(0);
     }
 
-    function clickSaveHandler() {
+    function clickReadyHandler() {
         if (!isReady) {
             socket.emit("game:field:init", field);
         }
@@ -136,7 +142,7 @@ const InitField = ({ isReady, setIsReady }: {
         <div className='init-field'>
 
             <div className='buttons'>
-                <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickSaveHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
+                <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickReadyHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
                 <Button onClick={backFieldHandler}>{"Отменить"}</Button>
                 <Button onClick={clearFieldHandler}>{"Очистить"}</Button>
             </div>
