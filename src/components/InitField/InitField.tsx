@@ -326,10 +326,6 @@ const InitField = ({ isReady, setIsReady }: {
                         <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
                     </div>
                 </div>
-
-                <div>
-                {(checkUsingAllShips())}
-                </div>
             </ShipsPanel >
         </div >
     );
