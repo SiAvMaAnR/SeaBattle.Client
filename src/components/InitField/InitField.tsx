@@ -24,7 +24,7 @@ const InitField = ({ isReady, setIsReady }: {
     const [tempSave, setTempSave] = useState<ISave>();
     const [curCoords, setCurCoords] = useState<CoordinateType[]>([]);
     const [lastSave, setLastSave] = useState<ISave>();
-    const defaultShips = useMemo(() => [0, 0, 0, 0, 0], []);
+    const defaultShips = useMemo(() => [1, 0, 0, 0, 0], []);
     const defaultField = useMemo(() => Array(10).fill(Array(10).fill(0)), []);
     const maxShips = useMemo(() => [1, 4, 3, 2, 1], [])
 
@@ -129,41 +129,32 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
 
-    function checkDirection(coordinate: CoordinateType | undefined): boolean {
+    function checkDirection(curCoords: CoordinateType[], coordinate: CoordinateType | undefined): boolean {
 
         if (curCoords.length === 0) {
             return true;
         }
 
-        const y = coordinate?.y;
-        const x = coordinate?.x;
+        const y = coordinate?.y ?? -1;
+        const x = coordinate?.x ?? -1;
 
         const lastCoord = curCoords[curCoords.length - 1];
 
         const penultimateCoord = curCoords[curCoords.length - 2]
 
-        if (!y || !x || !lastCoord) {
+        if (y === -1 || x === -1 || !lastCoord) {
             return false;
         }
 
         const yDiff = Math.abs(lastCoord.y - y);
         const xDiff = Math.abs(lastCoord.x - x);
 
-        console.log(penultimateCoord);
-        
-
-
         const firstCondition = yDiff === 1 && xDiff === 0;
         const secondCondition = yDiff === 0 && xDiff === 1;
         const thirdCondition = !penultimateCoord || penultimateCoord.y === y || penultimateCoord.x === x;
 
 
-        if ((firstCondition || secondCondition) && thirdCondition) {
-            return true;
-        }
-
-
-        return false;
+        return ((firstCondition || secondCondition) && thirdCondition);
     }
 
 
@@ -175,7 +166,11 @@ const InitField = ({ isReady, setIsReady }: {
             return row.map((cell, x) => {
                 const isCurrentCell = coordinate?.y === y && coordinate?.x === x;
 
-                if (isCurrentCell && cell === Cell.Empty && checkCellsAround(coordinate) && checkMaxShips(activeId) && checkDirection(coordinate)) {
+                const isCorrect = checkCellsAround(coordinate)
+                    && checkMaxShips(activeId)
+                    && (checkDirection(curCoords, coordinate) || checkDirection(curCoords.reverse(), coordinate));
+
+                if (isCurrentCell && cell === Cell.Empty && isCorrect) {
                     cell = Cell.Exists;
                     setCountCell(count => count - 1);
                     setIsChange(true);
@@ -234,6 +229,10 @@ const InitField = ({ isReady, setIsReady }: {
 
 
     function clearFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        if (isReady) {
+            return;
+        }
+
         setField(field => field.filter(row => row.fill(0)));
         setTempSave({
             field: [],
@@ -250,6 +249,10 @@ const InitField = ({ isReady, setIsReady }: {
 
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
+        if (isReady) {
+            return;
+        }
+
         setSaves(saves => {
             const newSaves = saves.filter((save, index) => index === 0 || index !== saves.length - 1) ?? {
                 field: defaultField,
@@ -265,7 +268,20 @@ const InitField = ({ isReady, setIsReady }: {
         setActiveId(0);
     }
 
+    function checkUsingAllShips(): boolean {
+        for (let i = 0; i < maxShips.length; i++) {
+            if (maxShips[i] !== lastSave?.ships[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     function clickReadyHandler() {
+        if (!checkUsingAllShips()) {
+            return;
+        }
+
         if (!isReady) {
             socket.emit("game:field:init", field);
         }
@@ -290,23 +306,23 @@ const InitField = ({ isReady, setIsReady }: {
             <ShipsPanel>
                 <div className='container'>
                     <div className='ship-info'>
-                        <div className='info'>{lastSave?.ships?.at(1) ?? "*"}</div>
+                        <div className='info'>{maxShips[1] - (lastSave?.ships?.at(1) ?? 0)}</div>
                         <div onClick={(e) => clickShipHandler(e, 1)} id={"s1"} className={`ship${activeId === 1 ? " active" : ""}`}></div>
                     </div>
 
                     <div className='ship-info'>
-                        <div className='info'>{lastSave?.ships?.at(2) ?? "*"}</div>
+                        <div className='info'>{maxShips[2] - (lastSave?.ships?.at(2) ?? 0)}</div>
                         <div onClick={(e) => clickShipHandler(e, 2)} id={"s2"} className={`ship${activeId === 2 ? " active" : ""}`}></div>
                     </div>
 
 
                     <div className='ship-info'>
-                        <div className='info'>{lastSave?.ships?.at(3) ?? "*"}</div>
+                        <div className='info'>{maxShips[3] - (lastSave?.ships?.at(3) ?? 0)}</div>
                         <div onClick={(e) => clickShipHandler(e, 3)} id={"s3"} className={`ship${activeId === 3 ? " active" : ""}`}></div>
                     </div>
 
                     <div className='ship-info'>
-                        <div className='info'>{lastSave?.ships?.at(4) ?? "*"}</div>
+                        <div className='info'>{maxShips[4] - (lastSave?.ships?.at(4) ?? 0)}</div>
                         <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
                     </div>
                 </div>
