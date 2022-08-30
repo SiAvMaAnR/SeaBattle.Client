@@ -46,7 +46,7 @@ const InitField = ({ isReady, setIsReady }: {
     }, [socket, defaultShips]);
 
     useEffect(() => {
-        console.log("SAVES: ", saves);
+        // console.log("SAVES: ", saves);
         // console.log("TEMP: ", tempSave);
         // console.log("COORDS: ", curCoords);
 
@@ -131,12 +131,39 @@ const InitField = ({ isReady, setIsReady }: {
 
     function checkDirection(coordinate: CoordinateType | undefined): boolean {
 
-        // if (curCoords.length === 0) {
-        //     return true;
-        // }
+        if (curCoords.length === 0) {
+            return true;
+        }
 
-        // return false;
-        return true;
+        const y = coordinate?.y;
+        const x = coordinate?.x;
+
+        const lastCoord = curCoords[curCoords.length - 1];
+
+        const penultimateCoord = curCoords[curCoords.length - 2]
+
+        if (!y || !x || !lastCoord) {
+            return false;
+        }
+
+        const yDiff = Math.abs(lastCoord.y - y);
+        const xDiff = Math.abs(lastCoord.x - x);
+
+        console.log(penultimateCoord);
+        
+
+
+        const firstCondition = yDiff === 1 && xDiff === 0;
+        const secondCondition = yDiff === 0 && xDiff === 1;
+        const thirdCondition = !penultimateCoord || penultimateCoord.y === y || penultimateCoord.x === x;
+
+
+        if ((firstCondition || secondCondition) && thirdCondition) {
+            return true;
+        }
+
+
+        return false;
     }
 
 
@@ -244,9 +271,6 @@ const InitField = ({ isReady, setIsReady }: {
         }
         socket.emit("game:ready", !isReady);
     }
-
-
-
 
     return (
         <div className='init-field'>
