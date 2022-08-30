@@ -219,6 +219,7 @@ const InitField = ({ isReady, setIsReady }: {
 
 
         setActiveId((activeId === shipId) ? 0 : shipId);
+        setCurCoords([]);
         setTempSave(save => {
             return saves[saves.length - 1] ?? {
                 field: save?.field,
