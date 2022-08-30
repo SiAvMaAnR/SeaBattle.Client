@@ -23,6 +23,7 @@ const InitField = ({ isReady, setIsReady }: {
     const [isChange, setIsChange] = useState<boolean>(false);
     const [tempSave, setTempSave] = useState<ISave>();
     const [curCoords, setCurCoords] = useState<CoordinateType[]>([]);
+    const [lastSave, setLastSave] = useState<ISave>();
     const defaultShips = useMemo(() => [0, 0, 0, 0, 0], []);
     const defaultField = useMemo(() => Array(10).fill(Array(10).fill(0)), []);
     const maxShips = useMemo(() => [1, 4, 3, 2, 1], [])
@@ -48,6 +49,8 @@ const InitField = ({ isReady, setIsReady }: {
         console.log("SAVES: ", saves);
         // console.log("TEMP: ", tempSave);
         // console.log("COORDS: ", curCoords);
+
+        setLastSave(saves[saves.length - 1]);
 
     }, [saves, tempSave, curCoords]);
 
@@ -112,13 +115,11 @@ const InitField = ({ isReady, setIsReady }: {
 
         const ships = lastSave?.ships;
 
-        console.log("ships", ships);
-
+        if (!ships) {
+            return true;
+        }
 
         for (let i = 0; i < ships.length; i++) {
-
-            console.log("CCC:", ships[i], maxShips[i]);
-
             if (ships[i] >= maxShips[i] && shipId === i) {
                 return false;
             }
@@ -126,6 +127,18 @@ const InitField = ({ isReady, setIsReady }: {
 
         return true;
     }
+
+
+    function checkDirection(coordinate: CoordinateType | undefined): boolean {
+
+        // if (curCoords.length === 0) {
+        //     return true;
+        // }
+
+        // return false;
+        return true;
+    }
+
 
     function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
@@ -135,7 +148,7 @@ const InitField = ({ isReady, setIsReady }: {
             return row.map((cell, x) => {
                 const isCurrentCell = coordinate?.y === y && coordinate?.x === x;
 
-                if (isCurrentCell && cell === Cell.Empty && checkCellsAround(coordinate) && checkMaxShips(activeId)) {
+                if (isCurrentCell && cell === Cell.Empty && checkCellsAround(coordinate) && checkMaxShips(activeId) && checkDirection(coordinate)) {
                     cell = Cell.Exists;
                     setCountCell(count => count - 1);
                     setIsChange(true);
@@ -211,7 +224,7 @@ const InitField = ({ isReady, setIsReady }: {
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
         setSaves(saves => {
-            const newSaves = saves.filter((save, index) => index !== saves.length - 1) ?? {
+            const newSaves = saves.filter((save, index) => index === 0 || index !== saves.length - 1) ?? {
                 field: defaultField,
                 ships: defaultShips
             };
@@ -220,7 +233,7 @@ const InitField = ({ isReady, setIsReady }: {
             return newSaves;
         });
 
-
+        setCurCoords([]);
         setCountCell(0);
         setActiveId(0);
     }
@@ -233,7 +246,7 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
 
-    const lastSave = saves[saves.length - 1];
+
 
     return (
         <div className='init-field'>
