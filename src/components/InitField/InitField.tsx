@@ -14,7 +14,7 @@ const InitField = ({ isReady, setIsReady }: {
 }) => {
     const socket = useContext(SocketContext);
 
-    const [message, setMessage] = useState<string>("Message");
+    const [message, setMessage] = useState<string>("");
     const [field, setField] = useState<number[][]>([]);
     const [name, setName] = useState<string>("Инициализация поля");
     const [countCell, setCountCell] = useState<number>(0);
@@ -45,6 +45,9 @@ const InitField = ({ isReady, setIsReady }: {
             socket.off("game:field:my");
         }
     }, [socket, defaultShips]);
+
+
+   
 
     useEffect(() => {
         // console.log("SAVES: ", saves);
@@ -316,6 +319,8 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
     function clickReadyHandler() {
+        setMessage("");
+
         if (!checkUsingAllShips()) {
             setMessage("Не все корабли расставлены!");
             return;
