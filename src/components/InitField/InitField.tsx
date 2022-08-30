@@ -210,7 +210,6 @@ const InitField = ({ isReady, setIsReady }: {
 
         setCountCell(shipId);
 
-        //корабль не доставлен/ осущ. изменения сетки/ есть выбранный корабль
         if (countCell > 0 && isChange && activeId !== 0) {
             const newField = tempSave?.field ?? [...field];
             setField(newField);
@@ -300,7 +299,7 @@ const InitField = ({ isReady, setIsReady }: {
 
             <Field clearFieldHandler={clearFieldHandler}
                 onContextMenu={clickGodCellHandler}
-                name={"Инициализация поля"}
+                name={name}
                 field={field}
                 onclick={clickCellHandler} />
 
@@ -326,6 +325,10 @@ const InitField = ({ isReady, setIsReady }: {
                         <div className='info'>{maxShips[4] - (lastSave?.ships?.at(4) ?? 0)}</div>
                         <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
                     </div>
+                </div>
+
+                <div>
+                {(checkUsingAllShips())}
                 </div>
             </ShipsPanel >
         </div >
