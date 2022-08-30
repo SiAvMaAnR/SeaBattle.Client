@@ -25,7 +25,7 @@ const InitField = ({ isReady, setIsReady }: {
     const [curCoords, setCurCoords] = useState<CoordinateType[]>([]);
     const defaultShips = useMemo(() => [0, 0, 0, 0, 0], []);
     const defaultField = useMemo(() => Array(10).fill(Array(10).fill(0)), []);
-
+    const maxShips = useMemo(() => [1, 4, 3, 2, 1], [])
 
     useEffect(() => {
         socket.on("game:field:my", (field: number[][]) => {
@@ -45,9 +45,9 @@ const InitField = ({ isReady, setIsReady }: {
     }, [socket, defaultShips]);
 
     useEffect(() => {
-        // console.log("SAVES: ", saves);
+        console.log("SAVES: ", saves);
         // console.log("TEMP: ", tempSave);
-        console.log("COORDS: ", curCoords);
+        // console.log("COORDS: ", curCoords);
 
     }, [saves, tempSave, curCoords]);
 
@@ -78,8 +78,6 @@ const InitField = ({ isReady, setIsReady }: {
         let startX = coordinate?.x ?? -1;
 
 
-        console.log(startY, startX);
-
         if (startY === -1 || startX === -1) {
             return false;
         }
@@ -98,10 +96,6 @@ const InitField = ({ isReady, setIsReady }: {
                 const current = curCoords.find(coord => coord.y === y && coord.x === x);
 
 
-                console.log("current: ", y, x);
-                console.log("coord: ", current);
-
-
                 if (field[y][x] === Cell.Exists && !current) {
                     return false;
                 }
@@ -112,6 +106,27 @@ const InitField = ({ isReady, setIsReady }: {
     }
 
 
+    function checkMaxShips(shipId: number): boolean {
+
+        const lastSave = saves[saves.length - 1];
+
+        const ships = lastSave?.ships;
+
+        console.log("ships", ships);
+
+
+        for (let i = 0; i < ships.length; i++) {
+
+            console.log("CCC:", ships[i], maxShips[i]);
+
+            if (ships[i] >= maxShips[i] && shipId === i) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
         if (isReady || countCell <= 0 || block || activeId === 0) return;
@@ -120,7 +135,7 @@ const InitField = ({ isReady, setIsReady }: {
             return row.map((cell, x) => {
                 const isCurrentCell = coordinate?.y === y && coordinate?.x === x;
 
-                if (isCurrentCell && cell === Cell.Empty && checkCellsAround(coordinate)) {
+                if (isCurrentCell && cell === Cell.Empty && checkCellsAround(coordinate) && checkMaxShips(activeId)) {
                     cell = Cell.Exists;
                     setCountCell(count => count - 1);
                     setIsChange(true);
