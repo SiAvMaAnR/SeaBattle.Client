@@ -22,8 +22,10 @@ const InitField = ({ isReady, setIsReady }: {
     const [activeId, setActiveId] = useState<number>(0);
     const [isChange, setIsChange] = useState<boolean>(false);
     const [tempSave, setTempSave] = useState<ISave>();
+    const [curCoords, setCurCoords] = useState<CoordinateType[]>([]);
     const defaultShips = useMemo(() => [0, 0, 0, 0, 0], []);
-    const defaultField = useMemo(() => Array(10).fill(Array(10).fill(0)), [])
+    const defaultField = useMemo(() => Array(10).fill(Array(10).fill(0)), []);
+
 
     useEffect(() => {
         socket.on("game:field:my", (field: number[][]) => {
@@ -43,14 +45,17 @@ const InitField = ({ isReady, setIsReady }: {
     }, [socket, defaultShips]);
 
     useEffect(() => {
-        console.log("SAVES: ", saves);
-        console.log("TEMP: ", tempSave);
+        // console.log("SAVES: ", saves);
+        // console.log("TEMP: ", tempSave);
+        console.log("COORDS: ", curCoords);
 
-    }, [saves, tempSave]);
+    }, [saves, tempSave, curCoords]);
 
 
     useEffect(() => {
         if (countCell <= 0) {
+            setCurCoords([]);
+
             setSaves(saves => [...saves, {
                 field: field,
                 ships: saves[saves.length - 1]?.ships?.map((ship, index) => (index === activeId) ? ++ship : ship),
@@ -66,7 +71,48 @@ const InitField = ({ isReady, setIsReady }: {
         }
     }, [countCell]);
 
-    async function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
+
+    function checkCellsAround(coordinate: CoordinateType | undefined): boolean {
+
+        let startY = coordinate?.y ?? -1;
+        let startX = coordinate?.x ?? -1;
+
+
+        console.log(startY, startX);
+
+        if (startY === -1 || startX === -1) {
+            return false;
+        }
+
+        const minY = (startY - 1 < 0) ? startY : startY - 1;
+        const minX = (startX - 1 < 0) ? startX : startX - 1;
+
+        const maxY = (startY + 1 > 9) ? 9 : startY + 1;
+        const maxX = (startX + 1 > 9) ? 9 : startX + 1;
+
+
+
+        for (let y = minY; y <= maxY; y++) {
+            for (let x = minX; x <= maxX; x++) {
+
+                const current = curCoords.find(coord => coord.y === y && coord.x === x);
+
+
+                console.log("current: ", y, x);
+                console.log("coord: ", current);
+
+
+                if (field[y][x] === Cell.Exists && !current) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
         if (isReady || countCell <= 0 || block || activeId === 0) return;
 
@@ -74,10 +120,11 @@ const InitField = ({ isReady, setIsReady }: {
             return row.map((cell, x) => {
                 const isCurrentCell = coordinate?.y === y && coordinate?.x === x;
 
-                if (isCurrentCell && cell === Cell.Empty) {
+                if (isCurrentCell && cell === Cell.Empty && checkCellsAround(coordinate)) {
                     cell = Cell.Exists;
                     setCountCell(count => count - 1);
                     setIsChange(true);
+                    setCurCoords(coords => [...coords, coordinate]);
                 }
 
                 return cell;
