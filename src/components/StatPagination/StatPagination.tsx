@@ -3,7 +3,9 @@ import "./StatPagination.css";
 
 const StatPagination = () => {
   return (
-    <div>StatPagination</div>
+    <div className='stat-pagination'>
+        paginate
+    </div>
   )
 }
 

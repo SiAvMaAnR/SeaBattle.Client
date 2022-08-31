@@ -1,0 +1,6 @@
+.stat-pagination {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 0 0 40px;
+}
