@@ -4,7 +4,7 @@ import accountApi from "../api/accountApi";
 const useUser = (props: [
     token: string | null,
     isLogged: boolean,
-    logout: Function
+    logout: () => void
 ]): [
         user: object
     ] => {

@@ -4,17 +4,19 @@ import { useToken } from '../../hooks';
 import GameStat, { IGameStat } from '../GameStat/GameStat';
 import "./StatGames.css";
 
-const StatGames = () => {
+const StatGames = ({ searchField }: {
+    searchField: string
+}) => {
     const [token, setToken] = useToken();
     const [games, setGames] = useState<IGameStat[]>([]);
 
     useEffect(() => {
-        statisticApi.getGames(token)
+        statisticApi.getGames(token, searchField)
             .then((response) => {
                 setGames(response?.data ?? []);
             })
             .catch((err) => { });
-    }, [token]);
+    }, [token, searchField]);
 
     return (
         <div className='stat-games'>

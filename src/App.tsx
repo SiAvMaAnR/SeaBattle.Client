@@ -16,8 +16,8 @@ const socket = io("http://localhost:3000");
 
 
 const SocketContext = createContext(socket);
-const TokenContext = createContext<([token: string | null, setToken: Function])>([null, new Function()]);
-const AuthContext = createContext<([isLogged: boolean, login: Function, logout: Function])>([false, new Function(), new Function()]);
+const TokenContext = createContext<([token: string | null, setToken: (token: string | null) => void])>([null, (token) => { }]);
+const AuthContext = createContext<([isLogged: boolean, login: (token: string) => void, logout: () => void])>([false, (token) => { }, () => { }]);
 const UserContext = createContext<[object]>([{}]);
 
 function App() {
