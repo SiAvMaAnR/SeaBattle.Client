@@ -1,22 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import statisticApi from '../../api/statisticApi';
-import { useToken } from '../../hooks';
 import GameStat, { IGameStat } from '../GameStat/GameStat';
 import "./StatGames.css";
 
-const StatGames = ({ searchField }: {
-    searchField: string
+const StatGames = ({ games }: {
+    games: IGameStat[]
 }) => {
-    const [token, setToken] = useToken();
-    const [games, setGames] = useState<IGameStat[]>([]);
-
-    useEffect(() => {
-        statisticApi.getGames(token, searchField)
-            .then((response) => {
-                setGames(response?.data ?? []);
-            })
-            .catch((err) => { });
-    }, [token, searchField]);
 
     return (
         <div className='stat-games'>
