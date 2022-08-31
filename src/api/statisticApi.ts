@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const statisticApi = {
-    getGames: async (token: string | null) => {
+    getGames: async (token: string | null, find?: string) => {
         const config = {
             headers: {
                 'accept': '*/*',
@@ -9,11 +9,11 @@ const statisticApi = {
             }
         }
 
-        return axios.get(`http://localhost:3000/api/statistic/games`, config)
+        return axios.get(`http://localhost:3000/api/statistic/games?find=${find}`, config)
             .then(response => response.data)
             .catch(error => null);
     },
-    getCommon: async (token: string | null) => {
+    getCommon: async (token: string | null, find?: string) => {
         const config = {
             headers: {
                 'accept': '*/*',
@@ -21,7 +21,7 @@ const statisticApi = {
             }
         }
 
-        return axios.get(`http://localhost:3000/api/statistic/common`, config)
+        return axios.get(`http://localhost:3000/api/statistic/common?find=${find}`, config)
             .then(response => response.data)
             .catch(error => null);
     }

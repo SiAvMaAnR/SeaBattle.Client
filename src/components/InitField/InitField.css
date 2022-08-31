@@ -1,16 +1,32 @@
 .init-field {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+}
+
+.init-field > .message {
+  flex: 0 0 150px;
+  font-size: 36px;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.init-field > .container {
+  flex: 0 1 70%;
+  display: flex;
   align-items: stretch;
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  justify-self: flex-start;
 }
 
-.init-field > * {
-  margin: 15px 0px;
-}
-
-.init-field > .buttons {
+.container > .buttons {
   display: flex;
   flex: 0 1 25%;
   flex-direction: column;
@@ -18,14 +34,14 @@
   align-items: center;
 }
 
-.init-field > .field {
+.container > .field {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1 0 50%;
 }
 
-.init-field > .panel {
+.container > .panel {
   display: flex;
   flex: 0 1 25%;
   flex-direction: column;
@@ -33,6 +49,6 @@
   align-items: center;
 }
 
-.init-field > .buttons > * {
-    margin: 10px 0 ;
+.container > .buttons > * {
+  margin: 10px 0;
 }

@@ -14,6 +14,7 @@ const InitField = ({ isReady, setIsReady }: {
 }) => {
     const socket = useContext(SocketContext);
 
+    const [message, setMessage] = useState<string>("");
     const [field, setField] = useState<number[][]>([]);
     const [name, setName] = useState<string>("Инициализация поля");
     const [countCell, setCountCell] = useState<number>(0);
@@ -44,6 +45,9 @@ const InitField = ({ isReady, setIsReady }: {
             socket.off("game:field:my");
         }
     }, [socket, defaultShips]);
+
+
+
 
     useEffect(() => {
         // console.log("SAVES: ", saves);
@@ -160,7 +164,19 @@ const InitField = ({ isReady, setIsReady }: {
 
     function clickCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
 
-        if (isReady || countCell <= 0 || block || activeId === 0) return;
+        setMessage("");
+
+        if (isReady) {
+            setMessage("Отмените готовность!");
+            return;
+        }
+
+        if (countCell <= 0) {
+            setMessage("Не выбран корабль!");
+            return;
+        }
+
+        if (block) return;
 
         const newField = field.map((row, y) => {
             return row.map((cell, x) => {
@@ -186,9 +202,15 @@ const InitField = ({ isReady, setIsReady }: {
 
 
     function clickGodCellHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, coordinate: CoordinateType | undefined) {
+        setMessage("");
+
         e.preventDefault();
 
-        if (isReady) return;
+
+        if (isReady) {
+            setMessage("Отмените готовность!");
+            return;
+        }
 
         const newField = field.map((row, y) => {
             return row.map((cell, x) => {
@@ -207,6 +229,12 @@ const InitField = ({ isReady, setIsReady }: {
 
 
     function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, shipId: number) {
+        setMessage("");
+
+        if (lastSave?.ships[shipId] === maxShips[shipId]) {
+            setMessage("Закончились корабли этого типа!");
+            return;
+        }
 
         setCountCell(shipId);
 
@@ -229,7 +257,10 @@ const InitField = ({ isReady, setIsReady }: {
 
 
     function clearFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        setMessage("");
+
         if (isReady) {
+            setMessage("Отмените готовность!");
             return;
         }
 
@@ -249,7 +280,10 @@ const InitField = ({ isReady, setIsReady }: {
 
     function backFieldHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
+        setMessage("");
+
         if (isReady) {
+            setMessage("Отмените готовность!");
             return;
         }
 
@@ -274,11 +308,15 @@ const InitField = ({ isReady, setIsReady }: {
                 return false;
             }
         }
+
         return true;
     }
 
     function clickReadyHandler() {
+        setMessage("");
+
         if (!checkUsingAllShips()) {
+            setMessage("Не все корабли расставлены!");
             return;
         }
 
@@ -290,46 +328,54 @@ const InitField = ({ isReady, setIsReady }: {
 
     return (
         <div className='init-field'>
-
-            <div className='buttons'>
-                <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickReadyHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
-                <Button onClick={backFieldHandler}>{"Отменить"}</Button>
-                <Button onClick={clearFieldHandler}>{"Очистить"}</Button>
+            <div className='message'>
+                {message}
             </div>
 
-            <Field clearFieldHandler={clearFieldHandler}
-                onContextMenu={clickGodCellHandler}
-                name={name}
-                field={field}
-                onclick={clickCellHandler} />
+            <div className='container'>
 
-            <ShipsPanel>
-                <div className='container'>
-                    <div className='ship-info'>
-                        <div className='info'>{maxShips[1] - (lastSave?.ships?.at(1) ?? 0)}</div>
-                        <div onClick={(e) => clickShipHandler(e, 1)} id={"s1"} className={`ship${activeId === 1 ? " active" : ""}`}></div>
-                    </div>
-
-                    <div className='ship-info'>
-                        <div className='info'>{maxShips[2] - (lastSave?.ships?.at(2) ?? 0)}</div>
-                        <div onClick={(e) => clickShipHandler(e, 2)} id={"s2"} className={`ship${activeId === 2 ? " active" : ""}`}></div>
-                    </div>
-
-
-                    <div className='ship-info'>
-                        <div className='info'>{maxShips[3] - (lastSave?.ships?.at(3) ?? 0)}</div>
-                        <div onClick={(e) => clickShipHandler(e, 3)} id={"s3"} className={`ship${activeId === 3 ? " active" : ""}`}></div>
-                    </div>
-
-                    <div className='ship-info'>
-                        <div className='info'>{maxShips[4] - (lastSave?.ships?.at(4) ?? 0)}</div>
-                        <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
-                    </div>
+                <div className='buttons'>
+                    <Button additionalClass={isReady ? "ready" : "not-ready"} onClick={() => clickReadyHandler()}>{isReady ? "Не готов" : "Готов"}</Button>
+                    <Button onClick={backFieldHandler}>{"Отменить"}</Button>
+                    <Button onClick={clearFieldHandler}>{"Очистить"}</Button>
                 </div>
-            </ShipsPanel >
-        </div >
-    );
 
+                <Field clearFieldHandler={clearFieldHandler}
+                    onContextMenu={clickGodCellHandler}
+                    name={name}
+                    field={field}
+                    onclick={clickCellHandler} />
+
+                <ShipsPanel>
+                    <div className='container'>
+
+                        <div className='ship-info'>
+                            <div className='info'>{maxShips[1] - (lastSave?.ships?.at(1) ?? 0)}</div>
+                            <div onClick={(e) => clickShipHandler(e, 1)} id={"s1"} className={`ship${activeId === 1 ? " active" : ""}`}></div>
+                        </div>
+
+                        <div className='ship-info'>
+                            <div className='info'>{maxShips[2] - (lastSave?.ships?.at(2) ?? 0)}</div>
+                            <div onClick={(e) => clickShipHandler(e, 2)} id={"s2"} className={`ship${activeId === 2 ? " active" : ""}`}></div>
+                        </div>
+
+
+                        <div className='ship-info'>
+                            <div className='info'>{maxShips[3] - (lastSave?.ships?.at(3) ?? 0)}</div>
+                            <div onClick={(e) => clickShipHandler(e, 3)} id={"s3"} className={`ship${activeId === 3 ? " active" : ""}`}></div>
+                        </div>
+
+                        <div className='ship-info'>
+                            <div className='info'>{maxShips[4] - (lastSave?.ships?.at(4) ?? 0)}</div>
+                            <div onClick={(e) => clickShipHandler(e, 4)} id={"s4"} className={`ship${activeId === 4 ? " active" : ""}`}></div>
+                        </div>
+                    </div>
+
+
+                </ShipsPanel >
+            </div >
+        </div>
+    );
 }
 
 

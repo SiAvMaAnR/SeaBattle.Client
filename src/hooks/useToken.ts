@@ -3,7 +3,7 @@ import { SocketContext } from "../App";
 
 const useToken = (): [
     token: string | null,
-    setTokenStorage: Function
+    setTokenStorage: (token: string | null) => void
 ] => {
 
     const socket = useContext(SocketContext);
@@ -12,7 +12,7 @@ const useToken = (): [
         return localStorage.getItem("token");
     });
 
-    function setTokenStorage(token: string) {
+    function setTokenStorage(token: string | null) {
         if (token) {
             localStorage.setItem("token", token);
             setToken(token);

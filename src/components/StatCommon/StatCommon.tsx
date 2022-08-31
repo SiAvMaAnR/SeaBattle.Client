@@ -11,23 +11,25 @@ interface ICommonStat {
   sumHits: number
 }
 
-const StatCommon = () => {
+const StatCommon = ({ searchField }: {
+  searchField: string
+}) => {
 
   const [token, setToken] = useToken();
   const [stats, setStats] = useState<ICommonStat>();
 
   useEffect(() => {
-    statisticApi.getCommon(token)
+    statisticApi.getCommon(token, searchField)
       .then((response) => {
         setStats(response?.data ?? {});
       })
       .catch((err) => { });
-  }, [token]);
+  }, [token, searchField]);
 
 
   function percentWins(): number {
     if (!stats?.countGames || !stats?.countWins) {
-      return -1;
+      return 0;
     }
     return Number((stats.countWins * 100 / stats.countGames).toFixed(2));
   }
@@ -37,23 +39,23 @@ const StatCommon = () => {
       <div className='container'>
         <div className='stat-cell'>
           <div className='head'>Всего ходов</div>
-          <div className='content'>{stats?.sumMoves}</div>
+          <div className='content'>{stats?.sumMoves ?? 0}</div>
         </div>
         <div className='stat-cell'>
           <div className='head'>Всего побед</div>
-          <div className='content'>{stats?.countWins}</div>
+          <div className='content'>{stats?.countWins ?? 0}</div>
         </div>
         <div className='stat-cell'>
           <div className='head'>Процент побед</div>
-          <div className='content'>{percentWins()}%</div>
+          <div className='content'>{percentWins() ?? 0}%</div>
         </div>
         <div className='stat-cell'>
           <div className='head'>Всего игр</div>
-          <div className='content'>{stats?.countGames}</div>
+          <div className='content'>{stats?.countGames ?? 0}</div>
         </div>
         <div className='stat-cell'>
           <div className='head'>Всего попаданий</div>
-          <div className='content'>{stats?.sumHits}</div>
+          <div className='content'>{stats?.sumHits ?? 0}</div>
         </div>
       </div>
     </div>

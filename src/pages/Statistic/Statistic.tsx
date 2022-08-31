@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchStatistic from "../../components/SearchStatistic/SearchStatistic";
 import StatCommon from "../../components/StatCommon/StatCommon";
 import StatGames from "../../components/StatGames/StatGames";
+import StatPagination from "../../components/StatPagination/StatPagination";
 import "./Statistic.css";
 
 const Statistic = () => {
 
-    const navigate = useNavigate();
+    const [searchField, setSearchField] = useState<string>("");
 
     useEffect(() => {
 
@@ -19,8 +21,10 @@ const Statistic = () => {
 
     return (
         <div className="statistic">
-            <StatCommon/>
-            <StatGames/>
+            <SearchStatistic setSearchField={setSearchField} searchField={searchField} />
+            <StatCommon searchField={searchField}/>
+            <StatGames searchField={searchField} />
+            <StatPagination />
         </div>
     );
 };

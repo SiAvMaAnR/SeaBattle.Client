@@ -9,7 +9,7 @@ type UseAuthResponse = [
 
 type UseAuthRequest = [
     token: string | null,
-    setToken: (Function)
+    setToken: (token: string | null) => void
 ]
 
 const useAuth = (props: UseAuthRequest): UseAuthResponse => {

@@ -4,9 +4,8 @@
   align-items: stretch;
   flex-direction: column;
   background: rgb(236, 236, 236);
-  flex: 1 1 100%;
+  flex: 1 1;
   border-radius: 5px;
-  overflow-y: scroll;
 }
 
 .stat-games > .stat-header {
@@ -32,6 +31,7 @@
 }
 
 .stat-games > .stat-content {
-  overflow: scroll;
-
+  overflow-y: scroll;
+  height: 80%;
+  flex: 0 0 45%;
 }
