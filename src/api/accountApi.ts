@@ -29,12 +29,10 @@ const accountApi = {
     register: async (params: {
         login: string,
         password: string,
-        confirmPassword: string
     }) => {
         const body = {
             login: params['login'],
             password: params['password'],
-            confirmPassword: params['confirmPassword'],
         };
 
         const config = {

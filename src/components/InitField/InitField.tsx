@@ -47,7 +47,7 @@ const InitField = ({ isReady, setIsReady }: {
     }, [socket, defaultShips]);
 
 
-   
+
 
     useEffect(() => {
         // console.log("SAVES: ", saves);
@@ -172,12 +172,7 @@ const InitField = ({ isReady, setIsReady }: {
         }
 
         if (countCell <= 0) {
-            setMessage("Закончились корабли этого типа");
-            return;
-        }
-
-        if (activeId === 0) {
-            setMessage("Не выбран тип корабля");
+            setMessage("Не выбран корабль!");
             return;
         }
 
@@ -235,6 +230,10 @@ const InitField = ({ isReady, setIsReady }: {
 
     function clickShipHandler(e: React.MouseEvent<HTMLDivElement, MouseEvent>, shipId: number) {
         setMessage("");
+
+        if (maxShips[shipId] === lastSave?.ships[shipId]) {
+            return;
+        }
 
         setCountCell(shipId);
 

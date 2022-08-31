@@ -15,21 +15,45 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+
+  function validation(): boolean {
+    setError("");
+
+    if (loginInput.length < 6) {
+      setError("Не корректный логин!");
+      return false;
+    }
+
+    if (passwordInput.length < 6) {
+      setError("Не корректный пароль!");
+      return false;
+    }
+
+    if (passwordInput !== confirmPasswordInput) {
+      setError("Не корректный повтор пароля!");
+      return false;
+    }
+
+    return true;
+  }
+
   const registerHandler = async () => {
+    if (!validation()) {
+      return;
+    }
+
     const registerRes = await accountApi.register({
       login: loginInput,
       password: passwordInput,
-      confirmPassword: confirmPasswordInput,
     });
 
     if (!registerRes) {
-      setError("login or password incorrect");
+      setError("Логин или пароль не верны!");
     }
 
-    const loginRes = await accountApi.register({
+    const loginRes = await accountApi.login({
       login: loginInput,
       password: passwordInput,
-      confirmPassword: confirmPasswordInput,
     });
 
     if (loginRes) {
