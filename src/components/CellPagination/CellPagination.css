@@ -1,0 +1,23 @@
+.cell-pag {
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 1s ease;
+  border-radius: 5px;
+  color: #475057;
+  background: white;
+  font-size: 18px;
+}
+
+.cell-pag:hover {
+  transform: scale(1.2);
+  transition: all 0.5s ease;
+}
+
+.cell-pag.active {
+  background: #475057;
+  color: white;
+}
