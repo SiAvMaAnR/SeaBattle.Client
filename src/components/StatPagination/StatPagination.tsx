@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CellPagination from '../CellPagination/CellPagination';
 import "./StatPagination.css";
 
 const StatPagination = ({ setNumberPage, numberPage, totalPages }: {
   setNumberPage: React.Dispatch<React.SetStateAction<number>>,
   numberPage: number,
-  totalPages: number
+  totalPages: number,
 }) => {
+
 
   function firstHandler() {
     setNumberPage(0);

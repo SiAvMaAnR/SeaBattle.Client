@@ -11,6 +11,7 @@ import Rooms from "./pages/Rooms/Rooms";
 import Statistic from "./pages/Statistic/Statistic";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import 'boxicons';
 
 const socket = io("http://localhost:3000");
 

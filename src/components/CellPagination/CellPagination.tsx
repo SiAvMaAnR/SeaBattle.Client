@@ -16,7 +16,7 @@ const CellPagination = ({ children, totalPages, active, setNumberPage }: {
 
     return (
         (children >= 0 && children + 1 <= totalPages)
-            ? <div onClick={() => clickHandler()} className={className}>{children + 1}</div>
+            ? <div className={className} onClick={() => clickHandler()} >{children + 1}</div>
             : <div className={'cell-pag'}></div>
     )
 }

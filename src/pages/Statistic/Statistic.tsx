@@ -15,22 +15,28 @@ const Statistic = () => {
     const [searchField, setSearchField] = useState<string>("");
     const [token, setToken] = useToken();
     const [games, setGames] = useState<IGameStat[]>([]);
-    const pageSize = 15;
+    const [dateSort, setDateSort] = useState<"asc" | "desc">("desc");
+    const pageSize = 10;
 
     useEffect(() => {
-        statisticApi.getGames(token, searchField, numberPage, pageSize)
+        statisticApi.getGames(token, searchField, numberPage, pageSize, dateSort)
             .then((response) => {
                 setGames(response?.data?.games ?? []);
                 setTotalPages(response?.data?.pages ?? 0);
             })
             .catch((err) => { });
-    }, [token, searchField, numberPage]);
+    }, [token, searchField, numberPage, dateSort]);
+
+
+    useEffect(() => {
+        setNumberPage(0);
+    }, [searchField, dateSort])
 
     return (
         <div className="statistic">
             <SearchStatistic setSearchField={setSearchField} searchField={searchField} />
             <StatCommon searchField={searchField} />
-            <StatGames games={games} />
+            <StatGames games={games} sort={dateSort} setSort={setDateSort} />
             <StatPagination setNumberPage={setNumberPage} numberPage={numberPage} totalPages={totalPages} />
         </div>
     );

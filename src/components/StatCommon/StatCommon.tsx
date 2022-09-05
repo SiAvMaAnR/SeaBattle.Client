@@ -12,7 +12,7 @@ interface ICommonStat {
 }
 
 const StatCommon = ({ searchField }: {
-  searchField: string
+  searchField: string,
 }) => {
 
   const [token, setToken] = useToken();

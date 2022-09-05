@@ -371,9 +371,8 @@ const InitField = ({ isReady, setIsReady }: {
                         </div>
                     </div>
 
-
                 </ShipsPanel >
-            </div >
+            </div>
         </div>
     );
 }
