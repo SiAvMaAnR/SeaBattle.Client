@@ -12,8 +12,6 @@ const Rooms = () => {
 
     useEffect(() => {
         socket.on("room:join", (isSuccess: boolean, message: string) => {
-            // console.log(message);
-            
             if (isSuccess) {
                 navigate("/game");
             }
@@ -23,8 +21,6 @@ const Rooms = () => {
             isSuccess: boolean,
             message: string
         }) => {
-            // console.log(message);
-
             if (isSuccess) {
                 navigate('/rooms');
             }

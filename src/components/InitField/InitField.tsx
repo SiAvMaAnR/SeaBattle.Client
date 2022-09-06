@@ -50,10 +50,6 @@ const InitField = ({ isReady, setIsReady }: {
 
 
     useEffect(() => {
-        // console.log("SAVES: ", saves);
-        // console.log("TEMP: ", tempSave);
-        // console.log("COORDS: ", curCoords);
-
         setLastSave(saves[saves.length - 1]);
 
     }, [saves, tempSave, curCoords]);
