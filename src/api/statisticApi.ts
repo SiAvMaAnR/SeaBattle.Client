@@ -1,7 +1,5 @@
-import axios from "axios";
 import axiosInstance from "./axios";
 
-// axios interceptors
 
 class StatisticApi {
     public async getGames(token: string | null, find?: string, page?: number, size?: number, sort?: string) {
