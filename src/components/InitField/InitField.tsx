@@ -286,6 +286,11 @@ const InitField = ({ isReady, setIsReady }: {
             setMessage("Отмените готовность!");
             return;
         }
+        
+        if(activeId){
+            setMessage("Завершите действие!");
+            return;
+        }
 
         setSaves(saves => {
             const newSaves = saves.filter((save, index) => index === 0 || index !== saves.length - 1) ?? {
