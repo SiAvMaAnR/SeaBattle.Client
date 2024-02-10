@@ -1,7 +1,6 @@
-.statistic{
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-    align-items: stretch;
-    height: 100%;
+.statistic {
+  display: grid;
+  grid-template-rows: 6% 10% 1fr 12%;
+  grid-template-columns: 1fr;
+  height: 100vh;
 }

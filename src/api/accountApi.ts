@@ -1,64 +1,47 @@
-import axios from "axios";
+import axiosInstance from "./axios";
 
-const accountApi = {
-    login: async ({ login, password }: {
+class AccountApi {
+
+    public async login({ login, password }: {
         login: string,
         password: string
     }): Promise<{
         type: string,
         token: string
-    }> => {
+    }> {
 
         const body = {
             login: login,
             password: password
         };
 
-        const config = {
-            headers: {
-                'accept': '*/*',
-                'Content-Type': 'application/json',
-            }
-        }
 
-        return axios.post(`http://localhost:3000/api/account/login`, body, config)
+        return axiosInstance.post(`/api/account/login`, body)
             .then(response => response.data)
             .catch(error => null);
+    }
 
-    },
-    register: async (params: {
+    public async register(params: {
         login: string,
         password: string,
-    }) => {
+    }) {
         const body = {
             login: params['login'],
             password: params['password'],
         };
 
-        const config = {
-            headers: {
-                'accept': '*/*',
-                'Content-Type': 'application/json',
-            }
-        }
-
-        return axios.post(`http://localhost:3000/api/account/register`, body, config)
+        return axiosInstance.post(`/api/account/register`, body)
             .then(response => response.data)
             .catch(error => null);
-    },
-    info: async (token: string | null) => {
-        const config = {
-            headers: {
-                'accept': '*/*',
-                'Authorization': `Bearer ${token}`,
-            }
-        }
+    }
 
-        return axios.get(`http://localhost:3000/api/account/info`, config)
+    public async info(token: string | null) {
+
+        return axiosInstance.get(`/api/account/info`)
             .then(response => response.data)
             .catch(error => null);
-    },
+    }
 }
 
 
-export default accountApi;
+export default new AccountApi();

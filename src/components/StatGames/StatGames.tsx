@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import statisticApi from '../../api/statisticApi';
-import { useToken } from '../../hooks';
 import GameStat, { IGameStat } from '../GameStat/GameStat';
+import "/node_modules/boxicons/css/boxicons.css";
 import "./StatGames.css";
 
-const StatGames = ({ searchField }: {
-    searchField: string
+const StatGames = ({ games, setSort, sort }: {
+    games: IGameStat[],
+    setSort: React.Dispatch<React.SetStateAction<"asc" | "desc">>,
+    sort: "asc" | "desc"
 }) => {
-    const [token, setToken] = useToken();
-    const [games, setGames] = useState<IGameStat[]>([]);
 
-    useEffect(() => {
-        statisticApi.getGames(token, searchField)
-            .then((response) => {
-                setGames(response?.data ?? []);
-            })
-            .catch((err) => { });
-    }, [token, searchField]);
+    function clickDateHandler() {
+        setSort(sort => {
+            return (sort === "desc") ? "asc" : "desc"
+        });
+    }
 
     return (
         <div className='stat-games'>
@@ -26,7 +22,10 @@ const StatGames = ({ searchField }: {
                 <div>{"Попаданий"}</div>
                 <div>{"Промахов"}</div>
                 <div>{"Враг"}</div>
-                <div>{"Дата"}</div>
+                <div className={sort} onClick={clickDateHandler}>
+                    {"Дата"}
+                    <i className='bx bx-down-arrow'></i>
+                </div>
             </div>
             <div className='stat-content'>
                 {games.map((game) =>
@@ -34,7 +33,7 @@ const StatGames = ({ searchField }: {
                 )}
             </div>
 
-        </div>
+        </div >
     )
 }
 

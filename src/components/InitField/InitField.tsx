@@ -50,10 +50,6 @@ const InitField = ({ isReady, setIsReady }: {
 
 
     useEffect(() => {
-        // console.log("SAVES: ", saves);
-        // console.log("TEMP: ", tempSave);
-        // console.log("COORDS: ", curCoords);
-
         setLastSave(saves[saves.length - 1]);
 
     }, [saves, tempSave, curCoords]);
@@ -286,6 +282,11 @@ const InitField = ({ isReady, setIsReady }: {
             setMessage("Отмените готовность!");
             return;
         }
+        
+        if(activeId){
+            setMessage("Завершите действие!");
+            return;
+        }
 
         setSaves(saves => {
             const newSaves = saves.filter((save, index) => index === 0 || index !== saves.length - 1) ?? {
@@ -371,9 +372,8 @@ const InitField = ({ isReady, setIsReady }: {
                         </div>
                     </div>
 
-
                 </ShipsPanel >
-            </div >
+            </div>
         </div>
     );
 }

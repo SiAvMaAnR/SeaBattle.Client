@@ -1,5 +1,5 @@
-import React, { createContext, FC, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import React, { createContext, useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import io from "socket.io-client";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
@@ -11,6 +11,7 @@ import Rooms from "./pages/Rooms/Rooms";
 import Statistic from "./pages/Statistic/Statistic";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import 'boxicons';
 
 const socket = io("http://localhost:3000");
 

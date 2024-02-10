@@ -48,7 +48,7 @@ const Register = () => {
     });
 
     if (!registerRes) {
-      setError("Логин или пароль не верны!");
+      setError("Некорректный ввод!");
     }
 
     const loginRes = await accountApi.login({
